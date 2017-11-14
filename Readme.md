@@ -1,7 +1,8 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Михаил Черемухин-Рерберг](https://up.htmlacademy.ru/javascript/11/user/429233).
-* Наставник: [Борис Ванюшин].
+* Наставник: [Борис Ванюшин]
+(https://htmlacademy.ru/profile/id62080).
 
 ---
 
