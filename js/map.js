@@ -46,9 +46,9 @@ var featuresArr = [
 
 
 // Нужно сгенерировать один объект с заданными свойствами
-var numberOfAnnouncements = 8;
+// var numberOfAnnouncements = 8;
 
-//получение рандомного значения свойства
+// получение рандомного значения свойства
 var getRandomElement = function (massive) {
   var element = massive[Math.floor(Math.random() * massive.length)];
   return element;
@@ -106,7 +106,7 @@ var getRandomAnnouncement = function () {
 };
 
 // получение массива из рандомных объектов
-var getAnnouncements = function (number) {
+/* var getAnnouncements = function (number) {
   var allAnnouncements = [];
 
   for (var i = 0; i < number; i++) {
@@ -115,4 +115,4 @@ var getAnnouncements = function (number) {
   return allAnnouncements;
 };
 
-// var offersMassive = getAnnouncements(numberOfAnnouncements);
+ var offersMassive = getAnnouncements(numberOfAnnouncements);*/
