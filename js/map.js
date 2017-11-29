@@ -1,6 +1,6 @@
 'use strict';
 
-//Создать массив [],состоящий из 8 сгенерированных объектов {}
+// Создать массив [],состоящий из 8 сгенерированных объектов {}
 var avatarsArr = [
   'img/avatars/user01.png',
   'img/avatars/user02.png',
@@ -58,7 +58,7 @@ var getRandomIndex = function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-//получение рандомного объекта из свойств
+// получение рандомного объекта из свойств
 var getRandomAnnouncement = function () {
   var announcement = {
     author: {
@@ -88,7 +88,7 @@ var getRandomAnnouncement = function () {
   announcement.author.avatar = getRandomElement(avatarsArr);
 
   announcement.offer.title = getRandomElement(titlesArr);
-  announcement.offer.address = "location.x, location.y";
+  announcement.offer.address = 'location.x, location.y';
   announcement.offer.price = getRandomIndex(1000, 1000000);
   announcement.offer.type = getRandomElement(typesArr);
   announcement.offer.rooms = getRandomIndex(1, 5);
@@ -105,7 +105,7 @@ var getRandomAnnouncement = function () {
   return announcement;
 };
 
-//получение массива из рандомных объектов
+// получение массива из рандомных объектов
 var getAnnouncements = function (number) {
   var allAnnouncements = [];
 
@@ -115,7 +115,4 @@ var getAnnouncements = function (number) {
   return allAnnouncements;
 };
 
-var offersMassive = getAnnouncements(numberOfAnnouncements);
-
-
-
+// var offersMassive = getAnnouncements(numberOfAnnouncements);
