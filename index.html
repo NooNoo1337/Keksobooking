@@ -15,7 +15,7 @@
 <main>
   <section class="map map--faded">
     <div class="map__pins">
-      <div class="map__pinsoverlay"><h2>И снова Токио!</h2></div>
+      <div class="map__pins overlay"><h2>И снова Токио!</h2></div>
 
       <button class="map__pin map__pin--main">
         <img src="img/main-pin-image.png" width="40" height="44" draggable="false">
@@ -218,7 +218,7 @@
   </div>
 </footer>
 
-<template>
+<template class="similar-announcement-template">
   <article class="map__card popup">
     <img src="img/avatars/user01.png" class="popup__avatar" width="70" height="70">
     <button class="popup__close">Закрыть</button>
@@ -242,7 +242,7 @@
     </ul>
   </article>
 
-  <button style="left: 200px; top: 400px;" class="map__pin"><img src="img/avatars/user07.png" width="40" height="40" draggable="false"></button>
+  <button style="left: 200px; top: 400px;" class="map__pin"><img src="img/avatars/user07.png" class="map__pin--avatar" width="40" height="40" draggable="false"></button>
 </template>
 <script src="js/map.js"></script>
 </body>
