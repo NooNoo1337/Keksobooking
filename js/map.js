@@ -115,9 +115,9 @@ var similarAnnouncementTemplate = document.querySelector('.similar-announcement-
 var renderWizard = function (announcement) {
   var announcementElement = similarAnnouncementTemplate.cloneNode(true);
   var typesOfProperty = {
-      flat: 'Квартира',
-      house: 'Дом',
-      bungalo: 'Бунгало'
+    flat: 'Квартира',
+    house: 'Дом',
+    bungalo: 'Бунгало'
   };
 
   announcementElement.querySelector('.map__pin').style.left = announcement.location.x + 'px';
@@ -125,7 +125,7 @@ var renderWizard = function (announcement) {
   announcementElement.querySelector('.map__pin--avatar').src = avatars[i];
 
   announcementElement.querySelector('h3').textContent = announcement.offer.title;
-  /*announcementElement.querySelector('small').textContent = announcement.offer.address;*/
+  /* announcementElement.querySelector('small').textContent = announcement.offer.address;*/
   announcementElement.querySelector('.popup__price').innerHTML = announcement.offer.price + ' &#x20bd;/ночь';
   announcementElement.querySelector('h4').textContent = typesOfProperty[announcement.offer.type];
   announcementElement.querySelector('.rooms').textContent = announcement.offer.rooms + ' комнат для ' + announcement.offer.guests + ' гостей';
