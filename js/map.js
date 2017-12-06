@@ -81,8 +81,6 @@ var setOfIntervals = {
   }
 };
 
-
-
 var numberOfAnnouncements = 8;
 
 // получение рандомного значения свойства
@@ -113,7 +111,6 @@ var getFeatures = function () {
   features.length = getRandomFeaturesLength();
   return features;
 };
-
 
 
 // получение рандомного объекта из свойств
@@ -184,11 +181,6 @@ for (var i = 0; i < announcementsMassive.length; i++) {
 
 similarPinElement.appendChild(fragment);
 
-var popup = similarAnnouncementTemplate.querySelector('.popup__features');
-while (popup.firstChild) {
-  popup.removeChild(popup.firstChild);
-}
-
 var renderAnnouncement = function (announcement) {
   var announcementElement = similarAnnouncementTemplate.cloneNode(true);
 
@@ -202,10 +194,10 @@ var renderAnnouncement = function (announcement) {
   announcementElement.querySelector('.popup__avatar').src = announcement.author.avatar;
   announcementElement.querySelector('.popup__features').textContent = announcement.offer.features;
 
-  for (var i = 0; i < announcement.offer.features.length; i++) {
+  for (var j = 0; j < announcement.offer.features.length; j++) {
     var item = document.createElement('li');
     item.className = 'feature';
-    item.classList.add('feature--' + announcement.offer.features[i]);
+    item.classList.add('feature--' + announcement.offer.features[j]);
     fragment.appendChild(item);
     announcementElement.querySelector('.popup__features').appendChild(fragment);
   }
@@ -214,5 +206,5 @@ var renderAnnouncement = function (announcement) {
 };
 
 
-fragment.appendChild(renderAnnouncement(announcementsMassive[0]));
+fragment.appendChild(renderAnnouncement(announcementsMassive[i]));
 mapBlock.appendChild(fragment);
