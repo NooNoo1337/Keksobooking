@@ -100,7 +100,6 @@ var getRandomFeaturesLength = function () {
   return randomFeaturesLength;
 };
 
-
 // получение фич
 var getFeatures = function () {
   var features = featuresArr.slice();
@@ -125,7 +124,7 @@ var getRandomAnnouncement = function () {
 
     offer: {
       title: getRandomElement(titles),
-      address: location.x + ', ' + location.y,
+      address: x + ', ' + y,
       price: getRandomFromInterval(setOfIntervals.price.min, setOfIntervals.price.max),
       type: getRandomElement(types),
       rooms: getRandomFromInterval(setOfIntervals.rooms.min, setOfIntervals.rooms.max),
@@ -181,19 +180,22 @@ for (var i = 0; i < announcementsMassive.length; i++) {
 
 similarPinElement.appendChild(fragment);
 
+var popup = similarAnnouncementTemplate.querySelector('.popup__features');
+while (popup.firstChild) {
+  popup.removeChild(popup.firstChild);
+}
+
 var renderAnnouncement = function (announcement) {
   var announcementElement = similarAnnouncementTemplate.cloneNode(true);
 
-  announcementElement.querySelector('h3').textContent = announcement.offer.title;
+  announcementElement.querySelector('.popup__title').textContent = announcement.offer.title;
   announcementElement.querySelector('small').textContent = announcement.offer.address;
-  announcementElement.querySelector('.popup__price').textContent = announcement.offer.price + '₽/ночь';
-  announcementElement.querySelector('popup__type').textContent = typesOfProperty[announcement.offer.type];
-  announcementElement.querySelector('.rooms').TextContent = announcement.offer.rooms + ' комнат для ' + announcement.offer.guests + ' гостей';
+  announcementElement.querySelector('.popup__price').textContent = announcement.offer.price + ' ₽/ночь';
+  announcementElement.querySelector('.popup__type').textContent = typesOfProperty[announcement.offer.type];
+  announcementElement.querySelector('.rooms').textContent = announcement.offer.rooms + ' комнат для ' + announcement.offer.guests + ' гостей';
   announcementElement.querySelector('.checkes').textContent = 'Заезд после ' + announcement.offer.checkin + ', выезд до ' + announcement.offer.checkout;
   announcementElement.querySelector('.description').textContent = announcement.offer.description;
   announcementElement.querySelector('.popup__avatar').src = announcement.author.avatar;
-  announcementElement.querySelector('.popup__features').textContent = announcement.offer.features;
-
   for (var j = 0; j < announcement.offer.features.length; j++) {
     var item = document.createElement('li');
     item.className = 'feature';
@@ -205,6 +207,5 @@ var renderAnnouncement = function (announcement) {
   return announcementElement;
 };
 
-
-fragment.appendChild(renderAnnouncement(announcementsMassive[i]));
+fragment.appendChild(renderAnnouncement(announcementsMassive[0]));
 mapBlock.appendChild(fragment);
