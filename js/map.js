@@ -219,7 +219,7 @@ mainPin.addEventListener('mouseup', function () {
   mapBlock.classList.remove('map--faded');
   mainForm.classList.remove('notice__form--disabled');
 
-  allFieldsets.forEach(function(item) {
+  allFieldsets.forEach(function (item) {
     item.removeAttribute('disabled');
   });
 
