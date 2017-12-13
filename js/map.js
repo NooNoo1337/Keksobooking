@@ -1,14 +1,10 @@
 'use strict';
 
 // Показ окна карты
+var mapBlock = document.querySelector('.map');
 var similarPinElement = document.querySelector('.map__pins');
 var similarPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 var similarAnnouncementTemplate = document.querySelector('template').content.querySelector('.map__card');
-var mapBlock = document.querySelector('.map');
-var mainPin = document.querySelector('.map__pin--main');
-var mainForm = document.querySelector('.notice__form');
-var allFieldsets = document.querySelectorAll('fieldset');
-var numberOfAnnouncements = 8;
 
 var avatars = [
   'img/avatars/user01.png',
@@ -86,10 +82,11 @@ var setOfIntervals = {
   }
 };
 
+var numberOfAnnouncements = 8;
 
 // получение рандомного значения свойства
-var getRandomElement = function (massive) {
-  var element = massive[Math.floor(Math.random() * massive.length)];
+var getRandomElement = function (array) {
+  var element = array[Math.floor(Math.random() * array.length)];
   return element;
 };
 
@@ -120,6 +117,7 @@ var getFeatures = function () {
 var getRandomAnnouncement = function () {
   var x = getRandomFromInterval(setOfIntervals.x.min, setOfIntervals.x.max);
   var y = getRandomFromInterval(setOfIntervals.y.min, setOfIntervals.y.max);
+
 
   var announcement = {
     author: {
@@ -161,14 +159,14 @@ var getAnnouncements = function (number) {
 
 var announcementsMassive = getAnnouncements(numberOfAnnouncements);
 
-// Отрисовка пина
+
+// Отрисовка пинов
 var renderMapPin = function (announcement, number) {
   var mapPinElement = similarPinTemplate.cloneNode(true);
 
   mapPinElement.style.top = announcement.location.y + 'px';
   mapPinElement.style.left = announcement.location.x + 'px';
   mapPinElement.querySelector('.map__pin--avatar').src = announcement.author.avatar;
-
   mapPinElement.id = 'pin-' + number;
 
   return mapPinElement;
@@ -176,11 +174,9 @@ var renderMapPin = function (announcement, number) {
 
 var fragment = document.createDocumentFragment();
 
+var pins = [];
 
-var allPins = [];
-
-// Отрисовка пинов
-var createMapPin = function (array) {
+var createAllPins = function (array) {
   for (var i = 0; i < announcementsMassive.length; i++) {
     array[i] = fragment.appendChild(renderMapPin(announcementsMassive[i], i));
   }
@@ -215,64 +211,84 @@ var renderAnnouncement = function (announcement) {
 
 };
 
-
-var createPopup = function () {
-  fragment.appendChild(renderAnnouncement(announcementsMassive[0]));
+var createPopup = function (number) {
+  fragment.appendChild(renderAnnouncement(announcementsMassive[number], number));
   mapBlock.appendChild(fragment);
-  var closePopupButton = mapBlock.querySelector('.popup__close');
-  closePopupButton.addEventListener('click', closeCurrentAnnouncement);
-
 };
 
+
+// работа с главным пином и мапой
+var mainPin = document.querySelector('.map__pin--main');
+var mainForm = document.querySelector('.notice__form');
+var allFieldsets = document.querySelectorAll('fieldset');
+var pinInFocus = similarPinTemplate.activeElement;
+var selectedPin;
+var ESC_BUTTON = 27;
+var ENTER_BUTTON = 13;
+
+// Активация карты
 var activateMap = function () {
   mapBlock.classList.remove('map--faded');
   mainForm.classList.remove('notice__form--disabled');
 
-  allFieldsets.forEach(function (item) {
+  allFieldsets.forEach(function(item) {
     item.removeAttribute('disabled');
   });
 
-  createMapPin(allPins);
-  createPopup();
+  createAllPins(pins);
 };
 
 mainPin.addEventListener('mouseup', activateMap);
 
-var clearPin = function () {
-  if (document.querySelector('.map__pin--active')) {
-    var pinActive = document.querySelector('.map__pin--active');
-    pinActive.classList.remove('map__pin--active');
+
+// Смена пина
+var changePinColor = function (node) {
+  if (selectedPin) {
+    selectedPin.classList.remove('map__pin--active');
   }
+  selectedPin = node;
+  selectedPin.classList.add('map__pin--active');
 };
 
-var closePopup = function () {
-  if (document.querySelector('.map__card')) {
-    var mapCard = document.querySelector('.map__card');
+
+
+var showPopup = function () {
+  var mapCard = document.querySelector('.popup');
+  var closePopupButton = mapBlock.querySelector('.popup__close');
+  mapCard.classList.remove('hidden');
+
+  var closePopup = function () {
     mapBlock.removeChild(mapCard);
-  }
+    selectedPin.classList.remove('map__pin--active');
+  };
+
+  var onPopupEscPress = function (evt) {
+    if (evt.keyCode === ESC_BUTTON) {
+      var closeByEnt = (closePopupButton === document.activeElement) ? 0 : closePopup();
+    }
+    return closeByEnt;
+  };
+
+  document.addEventListener('keydown', onPopupEscPress);
+  closePopupButton.addEventListener('click', closePopup);
 };
 
-var closeCurrentAnnouncement = function () {
-  closePopup();
-  clearPin();
-};
-
+// Открытие попапа
 var openPopup = function (evt) {
   var target = evt.target;
   var pinId;
-  var mapCard = document.querySelector('.popup');
-  mapCard.classList.remove('hidden');
-
-  while (target !== mapBlock) {
+  while (target !== 'button') {
     if (target.className === 'map__pin') {
-      closeCurrentAnnouncement();
-      target.classList.add('map__pin--active');
       pinId = target.id.replace('pin-', '');
       createPopup(pinId);
+      changePinColor(target);
+      showPopup();
       return;
     }
     target = target.parentNode;
   }
 };
 
-similarPinElement.addEventListener('mouseup', openPopup);
+
+similarPinElement.addEventListener('click', openPopup);
+
