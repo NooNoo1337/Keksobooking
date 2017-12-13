@@ -164,8 +164,6 @@ var getAnnouncements = function (number) {
 
 var announcementsMassive = getAnnouncements(numberOfAnnouncements);
 
-
-
 // Отрисовка пинов
 var renderMapPin = function (announcement, number) {
   var mapPinElement = similarPinTemplate.cloneNode(true);
