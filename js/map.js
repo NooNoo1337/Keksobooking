@@ -221,17 +221,16 @@ var createPopup = function (number) {
 var mainPin = document.querySelector('.map__pin--main');
 var mainForm = document.querySelector('.notice__form');
 var allFieldsets = document.querySelectorAll('fieldset');
-var pinInFocus = similarPinTemplate.activeElement;
 var selectedPin;
 var ESC_BUTTON = 27;
-var ENTER_BUTTON = 13;
+
 
 // Активация карты
 var activateMap = function () {
   mapBlock.classList.remove('map--faded');
   mainForm.classList.remove('notice__form--disabled');
 
-  allFieldsets.forEach(function(item) {
+  allFieldsets.forEach(function (item) {
     item.removeAttribute('disabled');
   });
 
@@ -249,7 +248,6 @@ var changePinColor = function (node) {
   selectedPin = node;
   selectedPin.classList.add('map__pin--active');
 };
-
 
 
 var showPopup = function () {
