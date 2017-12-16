@@ -254,7 +254,7 @@ var changePinColor = function (node) {
 };
 
 
-var showPopup = function () {
+var openPopup = function () {
   var mapCard = document.querySelector('.popup');
   var closePopupButton = mapBlock.querySelector('.popup__close');
   mapCard.classList.remove('hidden');
@@ -275,24 +275,27 @@ var showPopup = function () {
   closePopupButton.addEventListener('click', closePopup);
 };
 
-// open popup
-var openPopup = function (evt) {
+
+// show popup
+var showPopup = function (evt) {
   var target = evt.target;
   var pinId;
   while (target !== 'button') {
     if (target.className === 'map__pin') {
       pinId = target.id.replace('pin-', '');
+
       clearListOfFeatures();
 
       fragment.appendChild(renderAnnouncement(announcementsMassive[pinId], pinId));
       mapBlock.appendChild(fragment);
 
       changePinColor(target);
-      showPopup();
+      openPopup();
+
       return;
     }
     target = target.parentNode;
   }
 };
 
-similarPinElement.addEventListener('click', openPopup);
+similarPinElement.addEventListener('click', showPopup);
