@@ -1,7 +1,8 @@
 'use strict';
 
-// Показ окна карты
+// variables
 var mapBlock = document.querySelector('.map');
+var numberOfAnnouncements = 8;
 var similarPinElement = document.querySelector('.map__pins');
 var similarPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 var similarAnnouncementTemplate = document.querySelector('template').content.querySelector('.map__card');
@@ -87,26 +88,25 @@ var setOfIntervals = {
   }
 };
 
-var numberOfAnnouncements = 8;
 
-// получение рандомного значения свойства
-var getRandomElement = function (array) {
-  var element = array[Math.floor(Math.random() * array.length)];
+// get random value of property
+var getRandomElement = function (collection) {
+  var element = collection[Math.floor(Math.random() * collection.length)];
   return element;
 };
 
-// получение рандомного значения из интервала
+//  get random value from interval
 var getRandomFromInterval = function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-// получение рандомного длины массива характеристик
+// get random value of length of the collection of characteristics
 var getRandomFeaturesLength = function () {
   var randomFeaturesLength = Math.ceil(Math.random() * featuresArr.length);
   return randomFeaturesLength;
 };
 
-// получение фич
+// get random value of features
 var getFeatures = function () {
   var features = featuresArr.slice();
   function compareRandom() {
@@ -117,16 +117,27 @@ var getFeatures = function () {
   return features;
 };
 
+// получение пути к файлу с аватаркой
+var getAvatarPath = function (userNumber) {
+  var avatarPath = 'img/avatars/user';
+  avatarPath += (userNumber < 10 ? '0' : '') + userNumber + '.png';
+  return avatarPath;
+};
 
-// получение рандомного объекта из свойств
-var getRandomAnnouncement = function () {
+// получение author.avatar
+var getAvatar = function (number) {
+  avatars[number] = getAvatarPath(number + 1);
+  return avatars[number];
+};
+
+// get random object from properties
+var getRandomAnnouncement = function (number) {
   var x = getRandomFromInterval(setOfIntervals.x.min, setOfIntervals.x.max);
   var y = getRandomFromInterval(setOfIntervals.y.min, setOfIntervals.y.max);
 
-
   var announcement = {
     author: {
-      avatar: getRandomElement(avatars)
+      avatar: getAvatar(number)
     },
 
     offer: {
@@ -152,20 +163,20 @@ var getRandomAnnouncement = function () {
   return announcement;
 };
 
-// получение массива из рандомных объектов
+// get random collection of announcements from random objects
 var getAnnouncements = function (number) {
   var allAnnouncements = [];
 
   for (var i = 0; i < number; i++) {
-    allAnnouncements[i] = getRandomAnnouncement();
+    allAnnouncements[i] = getRandomAnnouncement(i);
   }
   return allAnnouncements;
 };
 
 var announcementsMassive = getAnnouncements(numberOfAnnouncements);
 
-// Отрисовка пинов
-var renderMapPin = function (announcement, number) {
+// render map pin
+var getMapPin = function (announcement, number) {
   var mapPinElement = similarPinTemplate.cloneNode(true);
 
   mapPinElement.style.top = announcement.location.y + 'px';
@@ -178,20 +189,22 @@ var renderMapPin = function (announcement, number) {
 
 var fragment = document.createDocumentFragment();
 
-var pins = [];
-
-var createAllPins = function (array) {
+// render all map pins
+var renderAllPins = function () {
+  var CollectionOfPins = [];
   for (var i = 0; i < announcementsMassive.length; i++) {
-    array[i] = fragment.appendChild(renderMapPin(announcementsMassive[i], i));
+    CollectionOfPins[i] = fragment.appendChild(getMapPin(announcementsMassive[i], i));
   }
   similarPinElement.appendChild(fragment);
 };
 
-// очистка features в шаблоне
-var listOfFeatures = similarAnnouncementTemplate.querySelector('.popup__features');
-while (listOfFeatures.firstChild) {
-  listOfFeatures.removeChild(listOfFeatures.firstChild);
-}
+
+var clearListOfFeatures = function () {
+  var listOfFeatures = similarAnnouncementTemplate.querySelector('.popup__features');
+  while (listOfFeatures.firstChild) {
+    listOfFeatures.removeChild(listOfFeatures.firstChild);
+  }
+};
 
 var renderAnnouncement = function (announcement) {
   var announcementElement = similarAnnouncementTemplate.cloneNode(true);
@@ -215,12 +228,6 @@ var renderAnnouncement = function (announcement) {
 
 };
 
-var createPopup = function (number) {
-  fragment.appendChild(renderAnnouncement(announcementsMassive[number], number));
-  mapBlock.appendChild(fragment);
-};
-
-
 // работа с главным пином и мапой
 // Активация карты
 var activateMap = function () {
@@ -231,13 +238,13 @@ var activateMap = function () {
     item.removeAttribute('disabled');
   });
 
-  createAllPins(pins);
+  renderAllPins();
 };
 
+// change pin
 mainPin.addEventListener('mouseup', activateMap);
 
 
-// Смена пина
 var changePinColor = function (node) {
   if (selectedPin) {
     selectedPin.classList.remove('map__pin--active');
@@ -268,14 +275,18 @@ var showPopup = function () {
   closePopupButton.addEventListener('click', closePopup);
 };
 
-// Открытие попапа
+// open popup
 var openPopup = function (evt) {
   var target = evt.target;
   var pinId;
   while (target !== 'button') {
     if (target.className === 'map__pin') {
       pinId = target.id.replace('pin-', '');
-      createPopup(pinId);
+      clearListOfFeatures();
+
+      fragment.appendChild(renderAnnouncement(announcementsMassive[pinId], pinId));
+      mapBlock.appendChild(fragment);
+
       changePinColor(target);
       showPopup();
       return;
@@ -285,4 +296,3 @@ var openPopup = function (evt) {
 };
 
 similarPinElement.addEventListener('click', openPopup);
-
