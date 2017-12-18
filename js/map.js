@@ -250,14 +250,8 @@ var closePopup = function () {
   selectedPin.classList.remove('map__pin--active');
 };
 
-
-var changePinColor = function (node) {
-  if (selectedPin) {
-    closePopup();
-    selectedPin.classList.remove('map__pin--active');
-  }
-  selectedPin = node;
-  selectedPin.classList.add('map__pin--active');
+var closePopupByClick = function () {
+  document.querySelector('.popup').classList.add('hidden');
 };
 
 var openPopup = function () {
@@ -266,14 +260,25 @@ var openPopup = function () {
 
   var onPopupEscPress = function (evt) {
     if (evt.keyCode === ESC_BUTTON) {
-      var closeByEnt = (closePopupButton === document.activeElement) ? 0 : closePopup();
+      var closeByEnt = (closePopupButton === document.activeElement) ? 0 : closePopupByClick();
     }
     return closeByEnt;
   };
 
   document.addEventListener('keydown', onPopupEscPress);
-  closePopupButton.addEventListener('click', closePopup);
+  closePopupButton.addEventListener('click', closePopupByClick);
 };
+
+var changePinColor = function (node) {
+  if (selectedPin) {
+    closePopup();
+    selectedPin.classList.remove('map__pin--active');
+  }
+  selectedPin = node;
+  selectedPin.classList.add('map__pin--active');
+  openPopup();
+};
+
 
 // show popup
 var showPopup = function (evt) {
