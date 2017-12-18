@@ -247,11 +247,11 @@ mainPin.addEventListener('mouseup', activateMap);
 var closePopup = function () {
   var mapCard = document.querySelector('.popup');
   mapBlock.removeChild(mapCard);
-  selectedPin.classList.remove('map__pin--active');
 };
 
 var closePopupByClick = function () {
   document.querySelector('.popup').classList.add('hidden');
+  selectedPin.classList.remove('map__pin--active');
 };
 
 var openPopup = function () {
