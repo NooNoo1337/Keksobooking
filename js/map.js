@@ -117,14 +117,14 @@ var getFeatures = function () {
   return features;
 };
 
-// получение пути к файлу с аватаркой
+// get path to the picture file
 var getAvatarPath = function (userNumber) {
   var avatarPath = 'img/avatars/user';
   avatarPath += (userNumber < 10 ? '0' : '') + userNumber + '.png';
   return avatarPath;
 };
 
-// получение author.avatar
+// get avatar
 var getAvatar = function (number) {
   avatars[number] = getAvatarPath(number + 1);
   return avatars[number];
@@ -228,8 +228,8 @@ var renderAnnouncement = function (announcement) {
 
 };
 
-// работа с главным пином и мапой
-// Активация карты
+// section with pins and map
+// Activate map
 var activateMap = function () {
   mapBlock.classList.remove('map--faded');
   mainForm.classList.remove('notice__form--disabled');
@@ -244,25 +244,25 @@ var activateMap = function () {
 // change pin
 mainPin.addEventListener('mouseup', activateMap);
 
+var closePopup = function () {
+  var mapCard = document.querySelector('.popup');
+  mapBlock.removeChild(mapCard);
+  selectedPin.classList.remove('map__pin--active');
+};
+
 
 var changePinColor = function (node) {
   if (selectedPin) {
+    closePopup();
     selectedPin.classList.remove('map__pin--active');
   }
   selectedPin = node;
   selectedPin.classList.add('map__pin--active');
 };
 
-
 var openPopup = function () {
-  var mapCard = document.querySelector('.popup');
   var closePopupButton = mapBlock.querySelector('.popup__close');
-  mapCard.classList.remove('hidden');
-
-  var closePopup = function () {
-    mapBlock.removeChild(mapCard);
-    selectedPin.classList.remove('map__pin--active');
-  };
+  document.querySelector('.popup').classList.remove('hidden');
 
   var onPopupEscPress = function (evt) {
     if (evt.keyCode === ESC_BUTTON) {
@@ -275,7 +275,6 @@ var openPopup = function () {
   closePopupButton.addEventListener('click', closePopup);
 };
 
-
 // show popup
 var showPopup = function (evt) {
   var target = evt.target;
@@ -283,15 +282,11 @@ var showPopup = function (evt) {
   while (target !== 'button') {
     if (target.className === 'map__pin') {
       pinId = target.id.replace('pin-', '');
-
       clearListOfFeatures();
-
       fragment.appendChild(renderAnnouncement(announcementsMassive[pinId], pinId));
       mapBlock.appendChild(fragment);
-
       changePinColor(target);
       openPopup();
-
       return;
     }
     target = target.parentNode;
