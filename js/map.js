@@ -9,7 +9,6 @@ var similarAnnouncementTemplate = document.querySelector('template').content.que
 var mainPin = document.querySelector('.map__pin--main');
 var mainForm = document.querySelector('.notice__form');
 var allFieldsets = document.querySelectorAll('fieldset');
-var selectedPin;
 var ESC_BUTTON = 27;
 
 var avatars = [
@@ -173,7 +172,7 @@ var getAnnouncements = function (number) {
   return allAnnouncements;
 };
 
-var announcementsMassive = getAnnouncements(numberOfAnnouncements);
+var announcementsCollection = getAnnouncements(numberOfAnnouncements);
 
 // render map pin
 var getMapPin = function (announcement, number) {
@@ -192,18 +191,10 @@ var fragment = document.createDocumentFragment();
 // render all map pins
 var renderAllPins = function () {
   var CollectionOfPins = [];
-  for (var i = 0; i < announcementsMassive.length; i++) {
-    CollectionOfPins[i] = fragment.appendChild(getMapPin(announcementsMassive[i], i));
+  for (var i = 0; i < announcementsCollection.length; i++) {
+    CollectionOfPins[i] = fragment.appendChild(getMapPin(announcementsCollection[i], i));
   }
   similarPinElement.appendChild(fragment);
-};
-
-
-var clearListOfFeatures = function () {
-  var listOfFeatures = similarAnnouncementTemplate.querySelector('.popup__features');
-  while (listOfFeatures.firstChild) {
-    listOfFeatures.removeChild(listOfFeatures.firstChild);
-  }
 };
 
 var renderAnnouncement = function (announcement) {
@@ -226,6 +217,15 @@ var renderAnnouncement = function (announcement) {
 
   return announcementElement;
 
+};
+
+// render all map announcements
+var renderAnnouncements = function (id) {
+  var CollectionOfA = [];
+  for (var i = 0; i < announcementsCollection.length; i++) {
+    CollectionOfA[i] = fragment.appendChild(renderAnnouncement(announcementsCollection[id], id));
+  }
+  mapBlock.appendChild(fragment);
 };
 
 // section with pins and map
@@ -251,29 +251,36 @@ var closePopup = function () {
 
 var closePopupByClick = function () {
   document.querySelector('.popup').classList.add('hidden');
-  selectedPin.classList.remove('map__pin--active');
+  setPinActive();
 };
 
-var openPopup = function () {
+var closePopupByButton = function () {
   var closePopupButton = mapBlock.querySelector('.popup__close');
-  document.querySelector('.popup').classList.remove('hidden');
 
   var onPopupEscPress = function (evt) {
     if (evt.keyCode === ESC_BUTTON) {
-      var closeByEnt = (closePopupButton === document.activeElement) ? 0 : closePopupByClick();
+      return closePopupByClick();
     }
-    return closeByEnt;
   };
 
   document.addEventListener('keydown', onPopupEscPress);
   closePopupButton.addEventListener('click', closePopupByClick);
 };
 
-var changePinColor = function (node) {
+var openPopup = function () {
+  document.querySelector('.popup').classList.remove('hidden');
+
+  closePopupByButton();
+};
+
+var setPinActive = function (node) {
+  var selectedPin = document.querySelector('.map__pin--active');
+
   if (selectedPin) {
     closePopup();
     selectedPin.classList.remove('map__pin--active');
   }
+
   selectedPin = node;
   selectedPin.classList.add('map__pin--active');
   openPopup();
@@ -283,14 +290,13 @@ var changePinColor = function (node) {
 // show popup
 var showPopup = function (evt) {
   var target = evt.target;
-  var pinId;
-  while (target !== 'button') {
-    if (target.className === 'map__pin') {
+
+  while (target !== mapBlock) {
+    if (target.classList.contains('map__pin')) {
+      var pinId;
       pinId = target.id.replace('pin-', '');
-      clearListOfFeatures();
-      fragment.appendChild(renderAnnouncement(announcementsMassive[pinId], pinId));
-      mapBlock.appendChild(fragment);
-      changePinColor(target);
+      renderAnnouncements(pinId);
+      setPinActive(target);
       openPopup();
       return;
     }
@@ -298,4 +304,4 @@ var showPopup = function (evt) {
   }
 };
 
-similarPinElement.addEventListener('click', showPopup);
+mapBlock.addEventListener('click', showPopup);
