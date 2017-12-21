@@ -252,6 +252,7 @@ var closePopup = function () {
 var closePopupByClick = function () {
   document.querySelector('.popup').classList.add('hidden');
   setPinActive();
+
 };
 
 var closePopupByButton = function () {
@@ -259,7 +260,7 @@ var closePopupByButton = function () {
 
   var onPopupEscPress = function (evt) {
     if (evt.keyCode === ESC_BUTTON) {
-      return closePopupByClick();
+      closePopupByClick();
     }
   };
 
@@ -277,8 +278,8 @@ var setPinActive = function (node) {
   var selectedPin = document.querySelector('.map__pin--active');
 
   if (selectedPin) {
-    closePopup();
     selectedPin.classList.remove('map__pin--active');
+    closePopup();
   }
 
   selectedPin = node;
