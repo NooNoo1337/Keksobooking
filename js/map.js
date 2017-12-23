@@ -306,3 +306,130 @@ var showPopup = function (evt) {
 };
 
 mapBlock.addEventListener('click', showPopup);
+
+// validation of form
+var titleInput = document.getElementById('title');
+var priceInput = document.getElementById('price');
+var timeIn = document.getElementById('timein');
+var timeOut = document.getElementById('timeout');
+var typeOfAccommodation = document.getElementById('type');
+var numberOfRooms = document.getElementById('room_number');
+var numberOfGuests = document.getElementById('capacity');
+
+var minPrice = {
+  flat: 1000,
+  bungalo: 0,
+  house: 5000,
+  palace: 10000
+};
+
+var collectionOfGuests = {
+  zero: 0,
+  one: 1,
+  two: 2,
+  three: 3
+};
+
+
+/* titleInput.style.boxShadow="0 0 4px 2px red";*/
+function randomNumberOfRooms(min, max) {
+  var randomValue = min + Math.random() * (max + 1 - min);
+  randomValue = Math.floor(randomValue);
+  return randomValue;
+}
+
+// change time option
+document.querySelector('.time__form').onchange = function(evt) {
+  timeIn.value = evt.target.value;
+  timeOut.value = evt.target.value;
+};
+
+
+
+// change min price of accommodation
+typeOfAccommodation.onchange = function() {
+  var price = minPrice[this.value];
+  priceInput.setAttribute('min', price);
+  priceInput.value = Math.max(price, priceInput.value);
+};
+
+// change number of guests depending on the number of rooms
+document.querySelector('.rooms__form').onchange = function() {
+  if (numberOfRooms.value === '1') {
+    return numberOfGuests.value = collectionOfGuests.one;
+  }
+
+  if (numberOfRooms.value === '2') {
+    return numberOfGuests.value = randomNumberOfRooms(collectionOfGuests.one, collectionOfGuests.two);
+  }
+
+  if (numberOfRooms.value === '3') {
+    return numberOfGuests.value = randomNumberOfRooms(collectionOfGuests.one, collectionOfGuests.three);
+  }
+
+  if (numberOfRooms.value === '100') {
+    return numberOfGuests.value = collectionOfGuests.zero;
+  }
+};
+
+
+(function() {
+  var checkTitleValidity = function() {
+    if (titleInput.validity.tooShort) {
+      titleInput.style.boxShadow="0 0 4px 2px red";
+      return titleInput.setCustomValidity('Имя должно состоять минимум из 30 символов');
+    }
+
+    if (titleInput.validity.tooLong) {
+      titleInput.style.boxShadow="0 0 4px 2px red";
+      return titleInput.setCustomValidity('Имя не должно превышать 100 символов');
+    }
+
+    if (titleInput.validity.valueMissing) {
+      titleInput.style.boxShadow="0 0 4px 2px red";
+      return titleInput.setCustomValidity('Обязательное поле для заполнения');
+    }
+
+    titleInput.style.boxShadow="none";
+    return titleInput.setCustomValidity('');
+  };
+
+  var checkPriceValidity = function() {
+    if (priceInput.validity.rangeUnderflow) {
+      priceInput.style.boxShadow="0 0 4px 2px red";
+      return priceInput.setCustomValidity('Минимальное значение этого поля - 0');
+    }
+
+    if (priceInput.validity.rangeOverflow) {
+      priceInput.style.boxShadow="0 0 4px 2px red";
+      return priceInput.setCustomValidity('Максимальное значение этого поля - 1000000');
+    }
+
+    if (priceInput.validity.valueMissing) {
+      priceInput.style.boxShadow="0 0 4px 2px red";
+      return priceInput.setCustomValidity('Обязательное поле для заполнения');
+    }
+
+    if (priceInput.validity.typeMismatch) {
+      priceInput.style.boxShadow="0 0 4px 2px red";
+      return priceInput.setCustomValidity('Это поле предназначено для числовых значений');
+    }
+
+    priceInput.style.boxShadow="none";
+    return priceInput.setCustomValidity('');
+  };
+
+  titleInput.addEventListener('invalid', checkTitleValidity, false);
+  priceInput.addEventListener('invalid', checkPriceValidity, false);
+
+  var mainForm = document.querySelector('.notice__form');
+  mainForm.addEventListener('submit', function(evt) {
+    checkTitleValidity();
+    checkPriceValidity();
+    if (!this.checkValidity()) {
+      evt.preventDefault();
+      titleInput.style.boxShadow="0 0 4px 2px red";
+    }
+  }, false);
+}());
+
