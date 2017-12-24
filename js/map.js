@@ -315,6 +315,7 @@ var timeOut = document.getElementById('timeout');
 var typeOfAccommodation = document.getElementById('type');
 var numberOfRooms = document.getElementById('room_number');
 var numberOfGuests = document.getElementById('capacity');
+var illuminationOfError = '0 0 4px 2px red';
 
 var minPrice = {
   flat: 1000,
@@ -328,6 +329,15 @@ var collectionOfGuests = {
   one: 1,
   two: 2,
   three: 3
+};
+
+var constraints = {
+  tooShort: 'Имя должно состоять минимум из 30 символов',
+  tooLong: 'Имя не должно превышать 100 символов',
+  valueMissing: 'Обязательное поле для заполнения',
+  rangeUnderflow: 'Имя должно состоять минимум из 30 символов',
+  rangeOverflow: 'Имя не должно превышать 100 символов',
+  typeMismatch: 'Это поле предназначено для числовых значений'
 };
 
 
@@ -379,18 +389,18 @@ document.querySelector('.rooms__form').onchange = function () {
 (function () {
   var checkTitleValidity = function () {
     if (titleInput.validity.tooShort) {
-      titleInput.style.boxShadow = '0 0 4px 2px red';
-      return titleInput.setCustomValidity('Имя должно состоять минимум из 30 символов');
+      titleInput.style.boxShadow = illuminationOfError;
+      return titleInput.setCustomValidity(constraints.tooShort);
     }
 
     if (titleInput.validity.tooLong) {
-      titleInput.style.boxShadow = '0 0 4px 2px red';
-      return titleInput.setCustomValidity('Имя не должно превышать 100 символов');
+      titleInput.style.boxShadow = illuminationOfError;
+      return titleInput.setCustomValidity(constraints.tooLong);
     }
 
     if (titleInput.validity.valueMissing) {
-      titleInput.style.boxShadow = '0 0 4px 2px red';
-      return titleInput.setCustomValidity('Обязательное поле для заполнения');
+      titleInput.style.boxShadow = illuminationOfError;
+      return titleInput.setCustomValidity(constraints.valueMissing);
     }
 
     titleInput.style.boxShadow = 'none';
@@ -399,23 +409,23 @@ document.querySelector('.rooms__form').onchange = function () {
 
   var checkPriceValidity = function () {
     if (priceInput.validity.rangeUnderflow) {
-      priceInput.style.boxShadow = '0 0 4px 2px red';
-      return priceInput.setCustomValidity('Минимальное значение этого поля - 0');
+      priceInput.style.boxShadow = illuminationOfError;
+      return priceInput.setCustomValidity(constraints.rangeUnderflow);
     }
 
     if (priceInput.validity.rangeOverflow) {
-      priceInput.style.boxShadow = '0 0 4px 2px red';
-      return priceInput.setCustomValidity('Максимальное значение этого поля - 1000000');
+      priceInput.style.boxShadow = illuminationOfError;
+      return priceInput.setCustomValidity(constraints.rangeOverflow);
     }
 
     if (priceInput.validity.valueMissing) {
-      priceInput.style.boxShadow = '0 0 4px 2px red';
-      return priceInput.setCustomValidity('Обязательное поле для заполнения');
+      priceInput.style.boxShadow = illuminationOfError;
+      return priceInput.setCustomValidity(constraints.valueMissing);
     }
 
     if (priceInput.validity.typeMismatch) {
-      priceInput.style.boxShadow = '0 0 4px 2px red';
-      return priceInput.setCustomValidity('Это поле предназначено для числовых значений');
+      priceInput.style.boxShadow = illuminationOfError;
+      return priceInput.setCustomValidity(constraints.typeMismatch);
     }
 
     priceInput.style.boxShadow = 'none';
@@ -430,7 +440,7 @@ document.querySelector('.rooms__form').onchange = function () {
     checkPriceValidity();
     if (!mainForm.checkValidity()) {
       evt.preventDefault();
-      titleInput.style.boxShadow = '0 0 4px 2px red';
+      titleInput.style.boxShadow = illuminationOfError;
     }
   }, false);
 }());
