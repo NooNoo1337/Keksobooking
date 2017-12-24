@@ -321,8 +321,8 @@ var constraints = {
   tooShort: 'Имя должно состоять минимум из 30 символов',
   tooLong: 'Имя не должно превышать 100 символов',
   valueMissing: 'Обязательное поле для заполнения',
-  rangeUnderflow: 'Имя должно состоять минимум из 30 символов',
-  rangeOverflow: 'Имя не должно превышать 100 символов',
+  rangeUnderflow: 'Минимальное значение этого поля не должно быть меньше 0',
+  rangeOverflow: 'Максимальное значение  1 000 000',
   typeMismatch: 'Это поле предназначено для числовых значений'
 };
 
@@ -333,41 +333,51 @@ var minPrice = {
   palace: 10000
 };
 
-var collectionOfGuest = {
+var collectionOfGuests = {
   '1': ['для 1 гостя'],
   '2': ['для 1 гостя', 'для 2 гостей'],
   '3': ['для 1 гостя', 'для 2 гостей', 'для 3 гостей'],
   '100': ['не для гостей']
 };
 
-// clear capacity
+var roomNumber = mainForm.querySelector('#room_number');
+var capacity = mainForm.querySelector('#capacity');
+
+var roomCapacity = {
+  '1': ['для 1 гостя'],
+  '2': ['для 1 гостя', 'для 2 гостей'],
+  '3': ['для 1 гостя', 'для 2 гостей', 'для 3 гостей'],
+  '100': ['не для гостей']
+};
+
+// очистка capacity
 var clearCapacity = function () {
-  while (numberOfGuests.firstChild) {
-    numberOfGuests.removeChild(numberOfGuests.firstChild);
+  while (capacity.firstChild) {
+    capacity.removeChild(capacity.firstChild);
   }
 };
 
-
-var renderNumber = function (value) {
-  for (var i = 0; i < collectionOfGuest[value].length; i++) {
-    var numberOfGuestsItem = document.createElement('option');
-    numberOfGuestsItem.textContent = collectionOfGuest[value][i];
-    numberOfGuests.appendChild(numberOfGuestsItem);
+// генерация значения для capacity
+var renderCapacity = function (value) {
+  for (var i = 0; i < roomCapacity[value].length; i++) {
+    var capacityItem = document.createElement('option');
+    capacityItem.textContent = roomCapacity[value][i];
+    capacity.appendChild(capacityItem);
   }
 };
 
-// synchronization of the number of rooms with the number of guests
+// синхронизация количества комнат с количеством гостей
 var getCapcities = function () {
-  var roomNumbers = numberOfRooms.children;
+  var roomNumbers = roomNumber.children;
   clearCapacity();
   for (var i = 0; i < roomNumbers.length; i++) {
     if (roomNumbers[i].selected) {
-      renderNumber(numberOfRooms.value);
+      renderCapacity(roomNumber.value);
     }
   }
 };
 
-numberOfRooms.addEventListener('change', getCapcities);
+roomNumber.addEventListener('change', getCapcities);
 
 
 // change time option
@@ -380,7 +390,6 @@ document.querySelector('.time__form').onchange = function (evt) {
 typeOfAccommodation.onchange = function () {
   var price = minPrice[this.value];
   priceInput.setAttribute('min', price);
-  priceInput.value = Math.max(price, priceInput.value);
 };
 
 (function () {
