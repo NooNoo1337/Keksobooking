@@ -317,20 +317,6 @@ var numberOfRooms = document.getElementById('room_number');
 var numberOfGuests = document.getElementById('capacity');
 var illuminationOfError = '0 0 4px 2px red';
 
-var minPrice = {
-  flat: 1000,
-  bungalo: 0,
-  house: 5000,
-  palace: 10000
-};
-
-var collectionOfGuests = {
-  zero: 0,
-  one: 1,
-  two: 2,
-  three: 3
-};
-
 var constraints = {
   tooShort: 'Имя должно состоять минимум из 30 символов',
   tooLong: 'Имя не должно превышать 100 символов',
@@ -340,13 +326,49 @@ var constraints = {
   typeMismatch: 'Это поле предназначено для числовых значений'
 };
 
+var minPrice = {
+  flat: 1000,
+  bungalo: 0,
+  house: 5000,
+  palace: 10000
+};
 
-/* titleInput.style.boxShadow="0 0 4px 2px red";*/
-function randomNumberOfRooms(min, max) {
-  var randomValue = min + Math.random() * (max + 1 - min);
-  randomValue = Math.floor(randomValue);
-  return randomValue;
-}
+var collectionOfGuest = {
+  '1': ['для 1 гостя'],
+  '2': ['для 1 гостя', 'для 2 гостей'],
+  '3': ['для 1 гостя', 'для 2 гостей', 'для 3 гостей'],
+  '100': ['не для гостей']
+};
+
+// clear capacity
+var clearCapacity = function () {
+  while (numberOfGuests.firstChild) {
+    numberOfGuests.removeChild(numberOfGuests.firstChild);
+  }
+};
+
+
+var renderNumber = function (value) {
+  for (var i = 0; i < collectionOfGuest[value].length; i++) {
+    var numberOfGuestsItem = document.createElement('option');
+    numberOfGuestsItem.textContent = collectionOfGuest[value][i];
+    numberOfGuests.appendChild(numberOfGuestsItem);
+  }
+};
+
+// synchronization of the number of rooms with the number of guests
+var getCapcities = function () {
+  var roomNumbers = numberOfRooms.children;
+  clearCapacity();
+  for (var i = 0; i < roomNumbers.length; i++) {
+    if (roomNumbers[i].selected) {
+      renderNumber(numberOfRooms.value);
+    }
+  }
+};
+
+numberOfRooms.addEventListener('change', getCapcities);
+
 
 // change time option
 document.querySelector('.time__form').onchange = function (evt) {
@@ -360,31 +382,6 @@ typeOfAccommodation.onchange = function () {
   priceInput.setAttribute('min', price);
   priceInput.value = Math.max(price, priceInput.value);
 };
-
-// change number of guests depending on the number of rooms
-document.querySelector('.rooms__form').onchange = function () {
-  if (numberOfRooms.value === '1') {
-    numberOfGuests.value = collectionOfGuests.one;
-    return numberOfGuests.value;
-  }
-
-  if (numberOfRooms.value === '2') {
-    numberOfGuests.value = randomNumberOfRooms(collectionOfGuests.one, collectionOfGuests.two);
-    return numberOfGuests.value;
-  }
-
-  if (numberOfRooms.value === '3') {
-    numberOfGuests.value = randomNumberOfRooms(collectionOfGuests.one, collectionOfGuests.three);
-    return numberOfGuests.value;
-  }
-
-  if (numberOfRooms.value === '100') {
-    numberOfGuests.value = collectionOfGuests.zero;
-    return numberOfGuests.value;
-  }
-  return numberOfRooms.value;
-};
-
 
 (function () {
   var checkTitleValidity = function () {
