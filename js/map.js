@@ -313,8 +313,9 @@ var priceInput = document.getElementById('price');
 var timeIn = document.getElementById('timein');
 var timeOut = document.getElementById('timeout');
 var typeOfAccommodation = document.getElementById('type');
-var numberOfRooms = document.getElementById('room_number');
-var numberOfGuests = document.getElementById('capacity');
+var roomNumber = mainForm.querySelector('#room_number');
+var capacity = mainForm.querySelector('#capacity');
+
 var illuminationOfError = '0 0 4px 2px red';
 
 var constraints = {
@@ -333,15 +334,6 @@ var minPrice = {
   palace: 10000
 };
 
-var collectionOfGuests = {
-  '1': ['для 1 гостя'],
-  '2': ['для 1 гостя', 'для 2 гостей'],
-  '3': ['для 1 гостя', 'для 2 гостей', 'для 3 гостей'],
-  '100': ['не для гостей']
-};
-
-var roomNumber = mainForm.querySelector('#room_number');
-var capacity = mainForm.querySelector('#capacity');
 
 var roomCapacity = {
   '1': ['для 1 гостя'],
