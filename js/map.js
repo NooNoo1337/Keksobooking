@@ -357,11 +357,15 @@ var clearCapacity = function () {
   }
 };
 
-// генерация значения для capacity
 var renderCapacity = function (value) {
   for (var i = 0; i < roomCapacity[value].length; i++) {
     var capacityItem = document.createElement('option');
     capacityItem.textContent = roomCapacity[value][i];
+    if (value === '100') {
+      capacityItem.value = i;
+    } else {
+      capacityItem.value = i + 1;
+    }
     capacity.appendChild(capacityItem);
   }
 };
