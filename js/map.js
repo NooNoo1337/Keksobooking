@@ -24,6 +24,7 @@ var createPopup = function (number) {
   mapBlock.appendChild(window.constants.fragment);
   document.querySelector('.popup').classList.remove('hidden');
 
+
   // создание события закрытия окна информации по клику и по нажатию на Enter
   var closePopupButton = mapBlock.querySelector('.popup__close');
   closePopupButton.addEventListener('click', closeCurrentAnnouncement);
