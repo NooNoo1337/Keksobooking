@@ -6,7 +6,7 @@ var mainPin = document.querySelector('.map__pin--main');
 var mainForm = document.querySelector('.notice__form');
 var allFieldsets = document.querySelectorAll('fieldset');
 var ESC_BUTTON = 27;
-
+var ENTER_BUTTON = 13;
 
 // render all map pins
 var renderAllPins = function () {
@@ -17,17 +17,25 @@ var renderAllPins = function () {
   window.constants.similarPinElement.appendChild(window.constants.fragment);
 };
 
-// render all map announcements
-var renderAnnouncements = function (id) {
-  var CollectionOfA = [];
-  for (var i = 0; i < window.data.announcementsCollection.length; i++) {
-    CollectionOfA[i] = window.constants.fragment.appendChild(window.card.createAnnouncement(window.data.announcementsCollection[id], id));
-  }
+
+// render all map announcement
+var createPopup = function (number) {
+  window.constants.fragment.appendChild(window.card.createAnnouncement(window.data.announcementsCollection[number]));
   mapBlock.appendChild(window.constants.fragment);
+  document.querySelector('.popup').classList.remove('hidden');
+
+  // создание события закрытия окна информации по клику и по нажатию на Enter
+  var closePopupButton = mapBlock.querySelector('.popup__close');
+  closePopupButton.addEventListener('click', closeCurrentAnnouncement);
+  closePopupButton.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_BUTTON) {
+      closeCurrentAnnouncement(evt);
+    }
+  });
 };
 
-// section with pins and map
-// Activate map
+
+// activate map
 var activateMap = function () {
   mapBlock.classList.remove('map--faded');
   mainForm.classList.remove('notice__form--disabled');
@@ -36,67 +44,62 @@ var activateMap = function () {
     item.removeAttribute('disabled');
   });
 
-  renderAllPins();
+  renderAllPins(window.data.announcementsCollection);
 };
 
-// change pin
-mainPin.addEventListener('mouseup', activateMap);
 
-var closePopup = function () {
-  var mapCard = document.querySelector('.popup');
-  mapBlock.removeChild(mapCard);
+mainPin.addEventListener('click', activateMap);
+
+mainPin.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_BUTTON) {
+    activateMap();
+  }
+});
+
+
+var checkEscButton = function (evt) {
+  if (evt.keyCode === ESC_BUTTON) {
+    closeCurrentAnnouncement(evt);
+  }
 };
 
-var closePopupByClick = function () {
-  document.querySelector('.popup').classList.add('hidden');
-  setPinActive();
-
-};
-
-var closePopupByButton = function () {
-  var closePopupButton = mapBlock.querySelector('.popup__close');
-
-  var onPopupEscPress = function (evt) {
-    if (evt.keyCode === ESC_BUTTON) {
-      closePopupByClick();
-    }
-  };
-
-  document.addEventListener('keydown', onPopupEscPress);
-  closePopupButton.addEventListener('click', closePopupByClick);
-};
-
-var openPopup = function () {
-  document.querySelector('.popup').classList.remove('hidden');
-
-  closePopupByButton();
-};
-
-var setPinActive = function (node) {
+var deactivatePin = function () {
   var selectedPin = document.querySelector('.map__pin--active');
 
   if (selectedPin) {
     selectedPin.classList.remove('map__pin--active');
-    closePopup();
   }
-
-  selectedPin = node;
-  selectedPin.classList.add('map__pin--active');
-  openPopup();
 };
 
+
+var closePopup = function () {
+  var mapCard = document.querySelector('.map__card');
+
+  if (mapCard) {
+    mapBlock.removeChild(mapCard);
+  }
+};
+
+
+var closeCurrentAnnouncement = function (evt) {
+  closePopup();
+  deactivatePin();
+  document.removeEventListener('keydown', checkEscButton);
+  evt.stopPropagation();
+};
 
 // show popup
 var showPopup = function (evt) {
   var target = evt.target;
-
+  document.addEventListener('keydown', checkEscButton);
   while (target !== mapBlock) {
-    if (target.classList.contains('map__pin')) {
+    if (target.className === 'map__pin') {
+      closePopup();
+      deactivatePin();
+      target.classList.add('map__pin--active');
       var pinId;
       pinId = target.id.replace('pin-', '');
-      renderAnnouncements(pinId);
-      setPinActive(target);
-      openPopup();
+      createPopup(pinId, evt);
       return;
     }
     target = target.parentNode;
@@ -104,3 +107,9 @@ var showPopup = function (evt) {
 };
 
 mapBlock.addEventListener('click', showPopup);
+
+mapBlock.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_BUTTON) {
+    showPopup(evt);
+  }
+});
