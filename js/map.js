@@ -382,9 +382,7 @@ roomNumber.addEventListener('change', function () {
   var roomsCountValue = roomNumber.value;
   capacity.value = (roomsCountValue === '100') ? '0' : roomsCountValue;
 
-  while (capacity.firstChild) {
-    capacity.removeChild(capacity.firstChild);
-  }
+  clearCapacity();
 
   renderCapacity(roomCapacity[roomsCountValue]);
 });
@@ -450,6 +448,3 @@ var checkPriceValidity = function () {
 
 titleInput.addEventListener('invalid', checkTitleValidity, false);
 priceInput.addEventListener('invalid', checkPriceValidity, false);
-
-
-
