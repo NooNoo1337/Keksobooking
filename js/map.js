@@ -197,7 +197,7 @@ var renderAllPins = function () {
   similarPinElement.appendChild(fragment);
 };
 
-var renderAnnouncement = function (announcement) {
+var createAnnouncement = function (announcement) {
   var announcementElement = similarAnnouncementTemplate.cloneNode(true);
   announcementElement.querySelector('.popup__title').textContent = announcement.offer.title;
   announcementElement.querySelector('small').textContent = announcement.offer.address;
@@ -223,7 +223,7 @@ var renderAnnouncement = function (announcement) {
 var renderAnnouncements = function (id) {
   var CollectionOfA = [];
   for (var i = 0; i < announcementsCollection.length; i++) {
-    CollectionOfA[i] = fragment.appendChild(renderAnnouncement(announcementsCollection[id], id));
+    CollectionOfA[i] = fragment.appendChild(createAnnouncement(announcementsCollection[id], id));
   }
   mapBlock.appendChild(fragment);
 };
@@ -334,12 +334,32 @@ var minPrice = {
   palace: 10000
 };
 
+var NO_GUESTS = {
+  value: 0,
+  text: 'не для гостей'
+};
+
+var ONE_GUEST = {
+  value: 1,
+  text: 'для 1 гостя'
+};
+
+var TWO_GUESTS = {
+  value: 2,
+  text: 'для 2 гостей'
+};
+
+var THREE_GUESTS = {
+  value: 3,
+  text: 'для 3 гостей'
+};
+
 
 var roomCapacity = {
-  '1': ['для 1 гостя'],
-  '2': ['для 1 гостя', 'для 2 гостей'],
-  '3': ['для 1 гостя', 'для 2 гостей', 'для 3 гостей'],
-  '100': ['не для гостей']
+  1: [ONE_GUEST],
+  2: [ONE_GUEST, TWO_GUESTS],
+  3: [ONE_GUEST, TWO_GUESTS, THREE_GUESTS],
+  100: [NO_GUESTS]
 };
 
 // очистка capacity
@@ -349,31 +369,25 @@ var clearCapacity = function () {
   }
 };
 
-var renderCapacity = function (value) {
-  for (var i = 0; i < roomCapacity[value].length; i++) {
+var renderCapacity = function (roomsCount) {
+  for (var i = 0; i < roomsCount.length; i++) {
     var capacityItem = document.createElement('option');
-    capacityItem.textContent = roomCapacity[value][i];
-    if (value === '100') {
-      capacityItem.value = i;
-    } else {
-      capacityItem.value = i + 1;
-    }
+    capacityItem.value = roomsCount[i].value;
+    capacityItem.innerHTML = roomsCount[i].text;
     capacity.appendChild(capacityItem);
   }
 };
 
-// синхронизация количества комнат с количеством гостей
-var getCapcities = function () {
-  var roomNumbers = roomNumber.children;
-  clearCapacity();
-  for (var i = 0; i < roomNumbers.length; i++) {
-    if (roomNumbers[i].selected) {
-      renderCapacity(roomNumber.value);
-    }
-  }
-};
+roomNumber.addEventListener('change', function () {
+  var roomsCountValue = roomNumber.value;
+  capacity.value = (roomsCountValue === '100') ? '0' : roomsCountValue;
 
-roomNumber.addEventListener('change', getCapcities);
+  while (capacity.firstChild) {
+    capacity.removeChild(capacity.firstChild);
+  }
+
+  renderCapacity(roomCapacity[roomsCountValue]);
+});
 
 
 // change time option
@@ -388,62 +402,54 @@ typeOfAccommodation.onchange = function () {
   priceInput.setAttribute('min', price);
 };
 
-(function () {
-  var checkTitleValidity = function () {
-    if (titleInput.validity.tooShort) {
-      titleInput.style.boxShadow = illuminationOfError;
-      return titleInput.setCustomValidity(constraints.tooShort);
-    }
 
-    if (titleInput.validity.tooLong) {
-      titleInput.style.boxShadow = illuminationOfError;
-      return titleInput.setCustomValidity(constraints.tooLong);
-    }
+var checkTitleValidity = function () {
+  if (titleInput.validity.tooShort) {
+    titleInput.style.boxShadow = illuminationOfError;
+    return titleInput.setCustomValidity(constraints.tooShort);
+  }
 
-    if (titleInput.validity.valueMissing) {
-      titleInput.style.boxShadow = illuminationOfError;
-      return titleInput.setCustomValidity(constraints.valueMissing);
-    }
+  if (titleInput.validity.tooLong) {
+    titleInput.style.boxShadow = illuminationOfError;
+    return titleInput.setCustomValidity(constraints.tooLong);
+  }
 
-    titleInput.style.boxShadow = 'none';
-    return titleInput.setCustomValidity('');
-  };
+  if (titleInput.validity.valueMissing) {
+    titleInput.style.boxShadow = illuminationOfError;
+    return titleInput.setCustomValidity(constraints.valueMissing);
+  }
 
-  var checkPriceValidity = function () {
-    if (priceInput.validity.rangeUnderflow) {
-      priceInput.style.boxShadow = illuminationOfError;
-      return priceInput.setCustomValidity(constraints.rangeUnderflow);
-    }
+  titleInput.style.boxShadow = 'none';
+  return titleInput.setCustomValidity('');
+};
 
-    if (priceInput.validity.rangeOverflow) {
-      priceInput.style.boxShadow = illuminationOfError;
-      return priceInput.setCustomValidity(constraints.rangeOverflow);
-    }
+var checkPriceValidity = function () {
+  if (priceInput.validity.rangeUnderflow) {
+    priceInput.style.boxShadow = illuminationOfError;
+    return priceInput.setCustomValidity(constraints.rangeUnderflow);
+  }
 
-    if (priceInput.validity.valueMissing) {
-      priceInput.style.boxShadow = illuminationOfError;
-      return priceInput.setCustomValidity(constraints.valueMissing);
-    }
+  if (priceInput.validity.rangeOverflow) {
+    priceInput.style.boxShadow = illuminationOfError;
+    return priceInput.setCustomValidity(constraints.rangeOverflow);
+  }
 
-    if (priceInput.validity.typeMismatch) {
-      priceInput.style.boxShadow = illuminationOfError;
-      return priceInput.setCustomValidity(constraints.typeMismatch);
-    }
+  if (priceInput.validity.valueMissing) {
+    priceInput.style.boxShadow = illuminationOfError;
+    return priceInput.setCustomValidity(constraints.valueMissing);
+  }
 
-    priceInput.style.boxShadow = 'none';
-    return priceInput.setCustomValidity('');
-  };
+  if (priceInput.validity.typeMismatch) {
+    priceInput.style.boxShadow = illuminationOfError;
+    return priceInput.setCustomValidity(constraints.typeMismatch);
+  }
 
-  titleInput.addEventListener('invalid', checkTitleValidity, false);
-  priceInput.addEventListener('invalid', checkPriceValidity, false);
+  priceInput.style.boxShadow = 'none';
+  return priceInput.setCustomValidity('');
+};
 
-  mainForm.addEventListener('submit', function (evt) {
-    checkTitleValidity();
-    checkPriceValidity();
-    if (!mainForm.checkValidity()) {
-      evt.preventDefault();
-      titleInput.style.boxShadow = illuminationOfError;
-    }
-  }, false);
-}());
+titleInput.addEventListener('invalid', checkTitleValidity, false);
+priceInput.addEventListener('invalid', checkPriceValidity, false);
+
+
 
