@@ -1,16 +1,41 @@
 'use strict';
 
 (function () {
-  // validation of form
-  var mainForm = document.querySelector('.notice__form');
-  var titleInput = document.getElementById('title');
-  var priceInput = document.getElementById('price');
+  // first pair of synchronized fields
+  // first form field (time of checkin)
   var timeIn = document.getElementById('timein');
+
+  // collection of values of the first form field (time of checkin)
+  var firstTimeField = timeIn.children;
+
+  // second form field (time of checkout)
   var timeOut = document.getElementById('timeout');
+
+  // collection of values of the second form field (time of checkout)
+  var secondTimeField = timeOut.children;
+
+  // second pair of synchronized fields
+  // first form field (type of accommodation)
   var typeOfAccommodation = document.getElementById('type');
-  var roomNumber = mainForm.querySelector('#room_number');
-  var capacity = mainForm.querySelector('#capacity');
-  var formAddress = mainForm.querySelector('#address');
+
+  // collection of values of the first form field (type of accommodation)
+  var formTypes = typeOfAccommodation.children;
+
+  // second form field (price for accommodation)
+  var priceInput = document.getElementById('price');
+
+  // collection of values of the second form field (price for accommodation)
+  var minPrice = [
+    '1000',
+    '0',
+    '5000',
+    '10000'
+  ];
+
+  var titleInput = document.getElementById('title');
+  var roomNumber = window.constants.mainForm.querySelector('#room_number');
+  var capacity = window.constants.mainForm.querySelector('#capacity');
+  var formAddress = window.constants.mainForm.querySelector('#address');
   var MAIN_PIN_WIDTH = 31;
   var MAIN_PIN_HEIGHT = 82;
 
@@ -21,16 +46,10 @@
     tooLong: 'Имя не должно превышать 100 символов',
     valueMissing: 'Обязательное поле для заполнения',
     rangeUnderflow: 'Минимальное значение этого поля не должно быть меньше 0',
-    rangeOverflow: 'Максимальное значение  1 000 000',
+    rangeOverflow: 'Максимальное значение  этого поля - 1 000 000',
     typeMismatch: 'Это поле предназначено для числовых значений'
   };
 
-  var minPrice = {
-    flat: 1000,
-    bungalo: 0,
-    house: 5000,
-    palace: 10000
-  };
 
   var NO_GUESTS = {
     value: 0,
@@ -52,7 +71,6 @@
     text: 'для 3 гостей'
   };
 
-
   var roomCapacity = {
     1: [ONE_GUEST],
     2: [ONE_GUEST, TWO_GUESTS],
@@ -60,7 +78,36 @@
     100: [NO_GUESTS]
   };
 
-  // очистка capacity
+
+  var synchronizeElement = function (element, item) {
+    element.value = item.value;
+  };
+
+  var synchronizeMinPrice = function (element, item) {
+    element.min = item;
+  };
+
+  var timeInSynchronization = function () {
+    window.synchronizeFields(timeOut, firstTimeField, secondTimeField, synchronizeElement);
+  };
+
+  timeInSynchronization();
+
+  var timeOutSynchronization = function () {
+    window.synchronizeFields(timeIn, secondTimeField, firstTimeField, synchronizeElement);
+  };
+
+  var typeSynchronization = function () {
+    window.synchronizeFields(priceInput, formTypes, minPrice, synchronizeMinPrice);
+  };
+
+  typeSynchronization();
+
+  timeIn.addEventListener('change', timeInSynchronization);
+  timeOut.addEventListener('change', timeOutSynchronization);
+  typeOfAccommodation.addEventListener('change', typeSynchronization);
+
+
   var clearCapacity = function () {
     while (capacity.firstChild) {
       capacity.removeChild(capacity.firstChild);
@@ -84,19 +131,6 @@
 
     renderCapacity(roomCapacity[roomsCountValue]);
   });
-
-
-  // change time option
-  document.querySelector('.time__form').onchange = function (evt) {
-    timeIn.value = evt.target.value;
-    timeOut.value = evt.target.value;
-  };
-
-  // change min price of accommodation
-  typeOfAccommodation.onchange = function () {
-    var price = minPrice[this.value];
-    priceInput.setAttribute('min', price);
-  };
 
 
   var checkTitleValidity = function () {
