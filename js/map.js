@@ -128,7 +128,6 @@ mapBlock.addEventListener('keydown', function (evt) {
 var dragPinMain = function (evt) {
   evt.preventDefault();
 
-  var pinCoordinates;
 
   var startCoordinates = {
     x: evt.clientX,
@@ -156,11 +155,6 @@ var dragPinMain = function (evt) {
 
     mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
     mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-
-    pinCoordinates = {
-      x: mainPin.offsetLeft - shift.x,
-      y: mainPin.offsetTop - shift.y
-    };
   };
 
   var onMouseUp = function (upEvent) {
