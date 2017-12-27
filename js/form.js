@@ -94,7 +94,7 @@
   timeInSynchronization();
 
   var timeOutSynchronization = function () {
-    window.synchronizeFields(timeIn, firstTimeField, secondTimeField, synchronizeElement);
+    window.synchronizeFields(timeIn, secondTimeField, firstTimeField, synchronizeElement);
   };
 
   var typeSynchronization = function () {
