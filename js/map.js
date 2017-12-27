@@ -44,8 +44,16 @@ var activateMap = function () {
     item.removeAttribute('disabled');
   });
 
+  var defaultCoordinates = {
+    x: mainPin.offsetLeft,
+    y: mainPin.offsetTop
+  };
+
+  window.constants.PIN_COORDINATES = defaultCoordinates;
+  window.form.getFormAddress(defaultCoordinates);
+
   mainPin.removeEventListener('mouseup', activateMap);
-  mainPin.addEventListener('mousedown', dragMainPin);
+  mainPin.addEventListener('mousedown', dragPinMain);
 
   renderAllPins(window.data.announcementsCollection);
 };
@@ -117,40 +125,48 @@ mapBlock.addEventListener('keydown', function (evt) {
   }
 });
 
-var dragMainPin = function (event) {
-  event.preventDefault();
+var dragPinMain = function (evt) {
+  evt.preventDefault();
+
   var pinCoordinates;
-  var startCoords = {
-    x: event.clientX,
-    y: event.clientY
+
+  var startCoordinates = {
+    x: evt.clientX,
+    y: evt.clientY
   };
+
   var onMouseMove = function (moveEvent) {
     moveEvent.preventDefault();
+
     var shift = {
-      x: startCoords.x - moveEvent.clientX,
-      y: startCoords.y - moveEvent.clientY
+      x: startCoordinates.x - moveEvent.clientX,
+      y: startCoordinates.y - moveEvent.clientY
     };
-    startCoords = {
+
+    startCoordinates = {
       x: moveEvent.clientX,
       y: moveEvent.clientY
     };
-    if (mainPin.offsetTop - shift.y < 125) {
-      mainPin.style.top = 125 + 'px';
-    } else if (mainPin.offsetTop - shift.y > 650) {
-      mainPin.style.top = 650 + 'px';
+
+    if (mainPin.offsetTop - shift.y < window.constants.MIN_PIN_COORDINATE) {
+      mainPin.style.top = window.constants.MIN_PIN_COORDINATE + 'px';
+    } else if (mainPin.offsetTop - shift.y > window.constants.MAX_PIN_COORDINATE) {
+      mainPin.style.top = window.constants.MAX_PIN_COORDINATE + 'px';
     }
+
     mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
     mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+
     pinCoordinates = {
       x: mainPin.offsetLeft - shift.x,
       y: mainPin.offsetTop - shift.y
     };
   };
+
   var onMouseUp = function (upEvent) {
     upEvent.preventDefault();
     mapBlock.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
-    window.form.getFormAddress(pinCoordinates);
   };
   mapBlock.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);

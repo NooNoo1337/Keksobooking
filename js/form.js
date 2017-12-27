@@ -10,7 +10,8 @@
   var typeOfAccommodation = document.getElementById('type');
   var roomNumber = mainForm.querySelector('#room_number');
   var capacity = mainForm.querySelector('#capacity');
-  var MAIN_PIN_HALF_WIDTH = 31;
+  var formAddress = mainForm.querySelector('#address');
+  var MAIN_PIN_WIDTH = 31;
   var MAIN_PIN_HEIGHT = 82;
 
   var illuminationOfError = '0 0 4px 2px red';
@@ -146,10 +147,9 @@
   titleInput.addEventListener('invalid', checkTitleValidity, false);
   priceInput.addEventListener('invalid', checkPriceValidity, false);
 
-  var getFormAddress = function (coords) {
-    var formAddress = mainForm.querySelector('#address');
-    var pinX = coords.x + MAIN_PIN_HALF_WIDTH;
-    var pinY = coords.y + MAIN_PIN_HEIGHT;
+  var getFormAddress = function (coordinates) {
+    var pinX = coordinates.x + MAIN_PIN_WIDTH;
+    var pinY = coordinates.y + MAIN_PIN_HEIGHT;
     formAddress.value = pinX + ', ' + pinY;
   };
 
