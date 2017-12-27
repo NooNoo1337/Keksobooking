@@ -1,11 +1,8 @@
 'use strict';
 
 // variables
-var mapBlock = document.querySelector('.map');
 var mainPin = document.querySelector('.map__pin--main');
 var allFieldsets = document.querySelectorAll('fieldset');
-var ESC_BUTTON = 27;
-var ENTER_BUTTON = 13;
 
 // render all map pins
 var renderAllPins = function () {
@@ -19,7 +16,7 @@ var renderAllPins = function () {
 
 // activate map
 var activateMap = function () {
-  mapBlock.classList.remove('map--faded');
+  window.constants.mapBlock.classList.remove('map--faded');
   window.constants.mainForm.classList.remove('notice__form--disabled');
 
   allFieldsets.forEach(function (item) {
@@ -44,16 +41,16 @@ var activateMap = function () {
 mainPin.addEventListener('click', activateMap);
 
 mainPin.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_BUTTON) {
+  if (evt.keyCode === window.constants.ENTER_BUTTON) {
     activateMap();
   }
 });
 
 
-mapBlock.addEventListener('click', window.showPopup);
+window.constants.mapBlock.addEventListener('click', window.showPopup);
 
-mapBlock.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_BUTTON) {
+window.constants.mapBlock.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === window.constants.ENTER_BUTTON) {
     window.showPopup(evt);
   }
 });
@@ -91,9 +88,9 @@ var dragPinMain = function (evt) {
 
   var onMouseUp = function (upEvent) {
     upEvent.preventDefault();
-    mapBlock.removeEventListener('mousemove', onMouseMove);
+    window.constants.mapBlock.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   };
-  mapBlock.addEventListener('mousemove', onMouseMove);
+  window.constants.mapBlock.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
 };

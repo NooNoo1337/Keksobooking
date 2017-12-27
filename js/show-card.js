@@ -1,17 +1,19 @@
 'use strict';
 
 (function () {
+  var ESC_BUTTON = 27;
+
   // render all map announcement
   var createPopup = function (number) {
     window.constants.fragment.appendChild(window.card.createAnnouncement(window.data.announcementsCollection[number]));
-    mapBlock.appendChild(window.constants.fragment);
+    window.constants.mapBlock.appendChild(window.constants.fragment);
     document.querySelector('.popup').classList.remove('hidden');
 
     // создание события закрытия окна информации по клику и по нажатию на Enter
-    var closePopupButton = mapBlock.querySelector('.popup__close');
+    var closePopupButton = window.constants.mapBlock.querySelector('.popup__close');
     closePopupButton.addEventListener('click', closeCurrentAnnouncement);
     closePopupButton.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ENTER_BUTTON) {
+      if (evt.keyCode === window.constants.ENTER_BUTTON) {
         closeCurrentAnnouncement(evt);
       }
     });
@@ -29,7 +31,7 @@
     var mapCard = document.querySelector('.map__card');
 
     if (mapCard) {
-      mapBlock.removeChild(mapCard);
+      window.constants.mapBlock.removeChild(mapCard);
     }
   };
 
@@ -50,7 +52,7 @@
   window.showPopup = function (evt) {
     var target = evt.target;
     document.addEventListener('keydown', checkEscButton);
-    while (target !== mapBlock) {
+    while (target !== window.constants.mapBlock) {
       if (target.className === 'map__pin') {
         closePopup();
         deactivatePin();
