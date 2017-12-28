@@ -310,6 +310,8 @@ textarea:focus
     border: solid 5px #ff5635;
     border-radius: 50%;
     background: #fff;
+
+    cursor: pointer;
 }
 
 .map__pin--main:active img,
@@ -862,7 +864,7 @@ textarea:focus
   width: 400px;
   font-size: 30px;
   text-align: center;
-  background-color: rgba(255, 255, 255, .6);
+  background-color: rgba(255, 255, 255, 0.6);
   border: 2px solid black;
   border-radius: 15px;
 }
@@ -874,6 +876,28 @@ textarea:focus
   width: 50px;
   height: 20px;
   text-align: center;
-  background-color: rgba(255, 255, 255, .6);
+  background-color: rgba(25, 102, 255, 0.6);
   border-radius: 15px;
+}
+
+.form-popup__button::before {
+  content: "";
+  position: absolute;
+  top: 106px;
+  left: 190px;
+  width: 16px;
+  height: 2px;
+  background-color: black;
+  transform: rotate(45deg);
+}
+
+.form-popup__button::after {
+  content: "";
+  position: absolute;
+  top: 106px;
+  left: 190px;
+  width: 16px;
+  height: 2px;
+  background-color: black;
+  transform: rotate(-45deg);
 }

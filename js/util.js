@@ -46,7 +46,7 @@
     document.body.insertAdjacentElement('afterbegin', formPopup);
     var formButton = document.createElement('button');
     formButton.classList.add('form-popup__button');
-    formButton.textContent = 'OK';
+    /* formButton.textContent = 'OK'; */
     var closePopup = function () {
       document.body.removeChild(formPopup);
     };
