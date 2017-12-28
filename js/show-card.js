@@ -59,7 +59,8 @@
         target.classList.add('map__pin--active');
         var pinId;
         pinId = target.id.replace('pin-', '');
-        createPopup(pinId, evt);
+        /* createPopup(pinId, evt);*/
+        window.load(createPopup, window.util.formHandler, pinId);
         return;
       }
       target = target.parentNode;

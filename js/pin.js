@@ -15,8 +15,17 @@
     return mapPinElement;
   };
 
+  // render all map pins
+  var renderAllPins = function () {
+    var CollectionOfPins = [];
+    for (var i = 0; i < window.data.announcementsCollection.length; i++) {
+      CollectionOfPins[i] = window.constants.fragment.appendChild(getMapPin(window.data.announcementsCollection[i], i));
+    }
+    window.constants.similarPinElement.appendChild(window.constants.fragment);
+  };
+
   window.pin = {
-    getMapPin: getMapPin
+    renderAllPins: renderAllPins
   };
 
 })();
