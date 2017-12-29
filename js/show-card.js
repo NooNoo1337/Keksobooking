@@ -4,8 +4,8 @@
   var ESC_BUTTON = 27;
 
   // render all map announcement
-  var createPopup = function (number) {
-    window.constants.fragment.appendChild(window.card.createAnnouncement(window.data.announcementsCollection[number]));
+  var createPopup = function (collection, number) {
+    window.constants.fragment.appendChild(window.card.createAnnouncement(collection[number]));
     window.constants.mapBlock.appendChild(window.constants.fragment);
     document.querySelector('.popup').classList.remove('hidden');
 
@@ -59,7 +59,8 @@
         target.classList.add('map__pin--active');
         var pinId;
         pinId = target.id.replace('pin-', '');
-        createPopup(pinId, evt);
+        /* createPopup(pinId, evt);*/
+        window.load(createPopup, window.util.formHandler, pinId);
         return;
       }
       target = target.parentNode;

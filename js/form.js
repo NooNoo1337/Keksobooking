@@ -103,6 +103,14 @@
 
   typeSynchronization();
 
+  var synchronizeForm = function () {
+    timeInSynchronization();
+    timeOutSynchronization();
+    typeSynchronization();
+  };
+
+  synchronizeForm();
+
   timeIn.addEventListener('change', timeInSynchronization);
   timeOut.addEventListener('change', timeOutSynchronization);
   typeOfAccommodation.addEventListener('change', typeSynchronization);
@@ -184,8 +192,22 @@
   var getFormAddress = function (coordinates) {
     var pinX = coordinates.x + MAIN_PIN_WIDTH;
     var pinY = coordinates.y + MAIN_PIN_HEIGHT;
-    formAddress.value = pinX + ', ' + pinY;
+    formAddress.value = 'x: ' + pinX + ', ' + 'y: ' + pinY;
   };
+
+  var resetForm = function () {
+    window.constants.mainForm.reset();
+    synchronizeForm();
+    window.util.formHandler('Данные успешно отправлены!');
+    getFormAddress(window.constants.PIN_COORDINATES);
+    window.constants.mainPin.style.left = window.constants.PIN_COORDINATES.x + 'px';
+    window.constants.mainPin.style.top = window.constants.PIN_COORDINATES.y + 'px';
+  };
+
+  window.constants.mainForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.upload(new FormData(window.constants.mainForm), resetForm, window.util.formHandler);
+  });
 
   window.form = {
     getFormAddress: getFormAddress

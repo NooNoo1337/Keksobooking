@@ -4,16 +4,6 @@
 var mainPin = document.querySelector('.map__pin--main');
 var allFieldsets = document.querySelectorAll('fieldset');
 
-// render all map pins
-var renderAllPins = function () {
-  var CollectionOfPins = [];
-  for (var i = 0; i < window.data.announcementsCollection.length; i++) {
-    CollectionOfPins[i] = window.constants.fragment.appendChild(window.pin.getMapPin(window.data.announcementsCollection[i], i));
-  }
-  window.constants.similarPinElement.appendChild(window.constants.fragment);
-};
-
-
 // activate map
 var activateMap = function () {
   window.constants.mapBlock.classList.remove('map--faded');
@@ -34,9 +24,8 @@ var activateMap = function () {
   mainPin.removeEventListener('mouseup', activateMap);
   mainPin.addEventListener('mousedown', dragPinMain);
 
-  renderAllPins(window.data.announcementsCollection);
+  window.load(window.pin.renderAllPins, window.util.formHandler);
 };
-
 
 mainPin.addEventListener('click', activateMap);
 

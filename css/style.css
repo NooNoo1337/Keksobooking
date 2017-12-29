@@ -295,7 +295,7 @@ textarea:focus
     width: 65px;
     height: 65px;
 
-    cursor: move;
+    cursor: pointer;
 }
 
 .map__pin--main img
@@ -310,6 +310,8 @@ textarea:focus
     border: solid 5px #ff5635;
     border-radius: 50%;
     background: #fff;
+
+    cursor: pointer;
 }
 
 .map__pin--main:active img,
@@ -846,4 +848,66 @@ textarea:focus
 .footer-social-item-vk
 {
     background-position: -10px -10px;
+}
+
+.form-popup {
+  position: fixed;
+  z-index: 100;
+  top: 100px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0 auto;
+  padding-top: 10px;
+  width: 400px;
+  font-size: 30px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px solid #fa9;
+  border-radius: 15px;
+}
+
+.form-popup__button {
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  width: 50px;
+  height: 20px;
+  text-align: center;
+  background-color: rgba(255, 248, 246, 0.6);
+  border-radius: 15px;
+}
+
+.form-popup__button:hover {
+  background-color: #ff6d51;
+  border-color: #ff6d51;
+}
+
+.form-popup__button:active {
+  background-color: #fa9;
+  border-color: #fa9;
+}
+
+.form-popup__button::before {
+  content: "";
+  position: absolute;
+  top: 106px;
+  left: 190px;
+  width: 16px;
+  height: 2px;
+  background-color: black;
+  transform: rotate(45deg);
+}
+
+.form-popup__button::after {
+  content: "";
+  position: absolute;
+  top: 106px;
+  left: 190px;
+  width: 16px;
+  height: 2px;
+  background-color: black;
+  transform: rotate(-45deg);
 }

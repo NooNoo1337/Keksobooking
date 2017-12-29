@@ -10,7 +10,9 @@
     MAX_PIN_COORDINATE: 650,
     mainForm: document.querySelector('.notice__form'),
     ENTER_BUTTON: 13,
-    mapBlock: document.querySelector('.map')
+    mapBlock: document.querySelector('.map'),
+    OK_STATUS: 200,
+    mainPin: document.querySelector('.map__pin--main')
   };
 
 })();
