@@ -24,7 +24,7 @@ var activateMap = function () {
   mainPin.removeEventListener('mouseup', activateMap);
   mainPin.addEventListener('mousedown', dragPinMain);
 
-  window.load(window.pin.renderAllPins, window.util.formHandler);
+  window.load(window.pin.getFragmentWithPins, window.util.formHandler);
 };
 
 mainPin.addEventListener('click', activateMap);
@@ -34,7 +34,6 @@ mainPin.addEventListener('keydown', function (evt) {
     activateMap();
   }
 });
-
 
 window.constants.mapBlock.addEventListener('click', window.showPopup);
 
