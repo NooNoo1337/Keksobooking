@@ -4,7 +4,6 @@
 var mainPin = document.querySelector('.map__pin--main');
 var allFieldsets = document.querySelectorAll('fieldset');
 
-
 // activate map
 var activateMap = function () {
   window.constants.mapBlock.classList.remove('map--faded');
@@ -26,9 +25,7 @@ var activateMap = function () {
   mainPin.addEventListener('mousedown', dragPinMain);
 
   window.load(window.pin.renderAllPins, window.util.formHandler);
-  /* window.pin.renderAllPins(window.data.announcementsCollection);*/
 };
-
 
 mainPin.addEventListener('click', activateMap);
 

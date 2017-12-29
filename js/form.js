@@ -192,7 +192,7 @@
   var getFormAddress = function (coordinates) {
     var pinX = coordinates.x + MAIN_PIN_WIDTH;
     var pinY = coordinates.y + MAIN_PIN_HEIGHT;
-    formAddress.value = pinX + ', ' + pinY;
+    formAddress.value = 'x: ' + pinX + ', ' + 'y: ' + pinY;
   };
 
   var resetForm = function () {

@@ -46,7 +46,6 @@
     document.body.insertAdjacentElement('afterbegin', formPopup);
     var formButton = document.createElement('button');
     formButton.classList.add('form-popup__button');
-    /* formButton.textContent = 'OK'; */
     var closePopup = function () {
       document.body.removeChild(formPopup);
     };
@@ -58,7 +57,15 @@
     getRandomElement: getRandomElement,
     getRandomFromInterval: getRandomFromInterval,
     getFeatures: getFeatures,
-    formHandler: formHandler
+    formHandler: formHandler,
+    debounce: function (debouncedFunction) {
+      var lastTimeout;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        debouncedFunction();
+      }, 1000);
+    }
   };
-
 })();

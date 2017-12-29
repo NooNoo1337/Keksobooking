@@ -295,7 +295,7 @@ textarea:focus
     width: 65px;
     height: 65px;
 
-    cursor: move;
+    cursor: pointer;
 }
 
 .map__pin--main img
@@ -865,7 +865,7 @@ textarea:focus
   font-size: 30px;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.6);
-  border: 2px solid black;
+  border: 2px solid #fa9;
   border-radius: 15px;
 }
 
@@ -876,8 +876,18 @@ textarea:focus
   width: 50px;
   height: 20px;
   text-align: center;
-  background-color: rgba(25, 102, 255, 0.6);
+  background-color: rgba(255, 248, 246, 0.6);
   border-radius: 15px;
+}
+
+.form-popup__button:hover {
+  background-color: #ff6d51;
+  border-color: #ff6d51;
+}
+
+.form-popup__button:active {
+  background-color: #fa9;
+  border-color: #fa9;
 }
 
 .form-popup__button::before {
