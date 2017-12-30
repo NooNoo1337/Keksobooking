@@ -1,18 +1,13 @@
 'use strict';
 
 (function () {
-
   window.constants = {
-    fragment: document.createDocumentFragment(),
-    similarPinElement: document.querySelector('.map__pins'),
-    PIN_COORDINATES: {},
-    MIN_PIN_COORDINATE: 125,
-    MAX_PIN_COORDINATE: 650,
-    mainForm: document.querySelector('.notice__form'),
-    ENTER_BUTTON: 13,
-    mapBlock: document.querySelector('.map'),
-    OK_STATUS: 200,
-    mainPin: document.querySelector('.map__pin--main')
+    mainform: document.querySelector('.notice__form'),
+    timeIn: document.querySelector('#timein'),
+    timeOut: document.querySelector('#timeout'),
+    priceInput: document.querySelector('#price'),
+    titleInput: document.querySelector('#title'),
+    typeInput: document.querySelector('#type')
   };
 
-})();
+}());

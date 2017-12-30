@@ -1,32 +1,37 @@
 'use strict';
 
 (function () {
-  var similarPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+  var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
-  // render map pin
-  var getMapPin = function (announcement, number) {
-    var mapPinElement = similarPinTemplate.cloneNode(true);
+  var onPinClick = function (evt, object) {
+    var activePin = document.querySelector('.map__pin--active');
 
-    mapPinElement.style.top = announcement.location.y + 'px';
-    mapPinElement.style.left = announcement.location.x + 'px';
-    mapPinElement.querySelector('.map__pin--avatar').src = announcement.author.avatar;
-    mapPinElement.id = 'pin-' + number;
-
-    return mapPinElement;
-  };
-
-  // render all map pins
-  var renderAllPins = function (collection) {
-    var CollectionOfPins = [];
-    for (var i = 0; i < window.data.announcementsCollection.length; i++) {
-      CollectionOfPins[i] = window.constants.fragment.appendChild(getMapPin(collection[i], i));
+    if (activePin) {
+      window.pin.removeActivePin(activePin);
     }
-    window.constants.similarPinElement.appendChild(window.constants.fragment);
+
+    evt.currentTarget.classList.add('map__pin--active');
+    window.showCard(object);
   };
 
-
+  // create pin
   window.pin = {
-    renderAllPins: renderAllPins
-  };
+    getMapPin: function (announcement) {
+      var mapPinElement = pinTemplate.cloneNode(true);
+      var pinAvatar = mapPinElement.querySelector('img');
+      mapPinElement.style.left = announcement.location.x - window.util.pinParameters.indentX + 'px';
+      mapPinElement.style.top = announcement.location.y - window.util.pinParameters.indentY + 'px';
+      pinAvatar.setAttribute('src', announcement.author.avatar);
 
+      mapPinElement.addEventListener('click', function (evt) {
+        onPinClick(evt, announcement);
+      });
+
+      return mapPinElement;
+    },
+
+    removeActivePin: function (activeElement) {
+      activeElement.classList.remove('map__pin--active');
+    }
+  };
 })();

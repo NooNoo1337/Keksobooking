@@ -1,55 +1,10 @@
 'use strict';
 
 (function () {
-  // first pair of synchronized fields
-  // first form field (time of checkin)
-  var timeIn = document.getElementById('timein');
-
-  // collection of values of the first form field (time of checkin)
-  var firstTimeField = timeIn.children;
-
-  // second form field (time of checkout)
-  var timeOut = document.getElementById('timeout');
-
-  // collection of values of the second form field (time of checkout)
-  var secondTimeField = timeOut.children;
-
-  // second pair of synchronized fields
-  // first form field (type of accommodation)
-  var typeOfAccommodation = document.getElementById('type');
-
-  // collection of values of the first form field (type of accommodation)
-  var formTypes = typeOfAccommodation.children;
-
-  // second form field (price for accommodation)
-  var priceInput = document.getElementById('price');
-
-  // collection of values of the second form field (price for accommodation)
-  var minPrice = [
-    '1000',
-    '0',
-    '5000',
-    '10000'
-  ];
-
-  var titleInput = document.getElementById('title');
-  var roomNumber = window.constants.mainForm.querySelector('#room_number');
-  var capacity = window.constants.mainForm.querySelector('#capacity');
-  var formAddress = window.constants.mainForm.querySelector('#address');
-  var MAIN_PIN_WIDTH = 31;
-  var MAIN_PIN_HEIGHT = 82;
-
+  var roomsNumber = window.constants.mainform.querySelector('#room_number');
+  var guestsCount = window.constants.mainform.querySelector('#capacity');
   var illuminationOfError = '0 0 4px 2px red';
-
-  var constraints = {
-    tooShort: 'Имя должно состоять минимум из 30 символов',
-    tooLong: 'Имя не должно превышать 100 символов',
-    valueMissing: 'Обязательное поле для заполнения',
-    rangeUnderflow: 'Минимальное значение этого поля не должно быть меньше 0',
-    rangeOverflow: 'Максимальное значение  этого поля - 1 000 000',
-    typeMismatch: 'Это поле предназначено для числовых значений'
-  };
-
+  var i = 0;
 
   var NO_GUESTS = {
     value: 0,
@@ -71,145 +26,134 @@
     text: 'для 3 гостей'
   };
 
-  var roomCapacity = {
+  var OPTIONS = {
+    100: [NO_GUESTS],
     1: [ONE_GUEST],
     2: [ONE_GUEST, TWO_GUESTS],
-    3: [ONE_GUEST, TWO_GUESTS, THREE_GUESTS],
-    100: [NO_GUESTS]
+    3: [ONE_GUEST, TWO_GUESTS, THREE_GUESTS]
+  };
+
+  var maxPrice = '1000000';
+
+  var typesOfAccommodation = ['bungalo', 'flat', 'house', 'palace'];
+
+  var minPrice = [
+    0,
+    1000,
+    5000,
+    10000
+  ];
+
+  var timeOfCheck = [
+    '12:00',
+    '13:00',
+    '14:00'
+  ];
+
+  var lengthOfTitle = {
+    MIN_LENGTH: 30,
+    MAX_LENGTH: 100
   };
 
 
-  var synchronizeElement = function (element, item) {
-    element.value = item.value;
+  var succesMessage = function () {
+    var formPopup = document.createElement('div');
+    formPopup.classList.add('form-popup');
+    formPopup.textContent = 'Форма успешно отправлена!';
+    document.body.insertAdjacentElement('afterbegin', formPopup);
+    var formButton = document.createElement('button');
+    formButton.classList.add('form-popup__button');
+    var closePopup = function () {
+      document.body.removeChild(formPopup);
+    };
+    formButton.addEventListener('click', closePopup);
+    formPopup.appendChild(formButton);
   };
 
-  var synchronizeMinPrice = function (element, item) {
-    element.min = item;
+  var onSuccess = function () {
+    window.constants.mainform.reset();
+    succesMessage();
   };
 
-  var timeInSynchronization = function () {
-    window.synchronizeFields(timeOut, firstTimeField, secondTimeField, synchronizeElement);
+
+  var synchronizeValues = function (element, value) {
+    element.value = value;
   };
 
-  timeInSynchronization();
-
-  var timeOutSynchronization = function () {
-    window.synchronizeFields(timeIn, secondTimeField, firstTimeField, synchronizeElement);
+  var synchronizeMinValue = function (element, value) {
+    element.min = value;
   };
 
-  var typeSynchronization = function () {
-    window.synchronizeFields(priceInput, formTypes, minPrice, synchronizeMinPrice);
-  };
-
-  typeSynchronization();
-
-  var synchronizeForm = function () {
-    timeInSynchronization();
-    timeOutSynchronization();
-    typeSynchronization();
-  };
-
-  synchronizeForm();
-
-  timeIn.addEventListener('change', timeInSynchronization);
-  timeOut.addEventListener('change', timeOutSynchronization);
-  typeOfAccommodation.addEventListener('change', typeSynchronization);
-
-
-  var clearCapacity = function () {
-    while (capacity.firstChild) {
-      capacity.removeChild(capacity.firstChild);
-    }
-  };
-
-  var renderCapacity = function (roomsCount) {
-    for (var i = 0; i < roomsCount.length; i++) {
-      var capacityItem = document.createElement('option');
-      capacityItem.value = roomsCount[i].value;
-      capacityItem.innerHTML = roomsCount[i].text;
-      capacity.appendChild(capacityItem);
-    }
-  };
-
-  roomNumber.addEventListener('change', function () {
-    var roomsCountValue = roomNumber.value;
-    capacity.value = (roomsCountValue === '100') ? '0' : roomsCountValue;
-
-    clearCapacity();
-
-    renderCapacity(roomCapacity[roomsCountValue]);
+  // synchronize checkin field with checkout field
+  window.constants.timeIn.addEventListener('change', function () {
+    window.synchronizeFields(window.constants.timeIn, window.constants.timeOut, timeOfCheck, timeOfCheck, synchronizeValues);
   });
 
+  window.constants.timeOut.addEventListener('change', function () {
+    window.synchronizeFields(window.constants.timeOut, window.constants.timeIn, timeOfCheck, timeOfCheck, synchronizeValues);
+  });
 
-  var checkTitleValidity = function () {
-    if (titleInput.validity.tooShort) {
-      titleInput.style.boxShadow = illuminationOfError;
-      return titleInput.setCustomValidity(constraints.tooShort);
+  // synchronize type of accommodation field with it price
+  window.constants.typeInput.addEventListener('change', function () {
+    window.synchronizeFields(window.constants.typeInput, window.constants.priceInput, typesOfAccommodation, minPrice, synchronizeMinValue);
+  });
+
+  var getOptions = function (guests) {
+    for (i = 0; i < guests.length; i++) {
+      var option = document.createElement('option');
+      option.value = guests[i].value;
+      option.innerHTML = guests[i].text;
+      guestsCount.appendChild(option);
     }
-
-    if (titleInput.validity.tooLong) {
-      titleInput.style.boxShadow = illuminationOfError;
-      return titleInput.setCustomValidity(constraints.tooLong);
-    }
-
-    if (titleInput.validity.valueMissing) {
-      titleInput.style.boxShadow = illuminationOfError;
-      return titleInput.setCustomValidity(constraints.valueMissing);
-    }
-
-    titleInput.style.boxShadow = 'none';
-    return titleInput.setCustomValidity('');
   };
 
-  var checkPriceValidity = function () {
-    if (priceInput.validity.rangeUnderflow) {
-      priceInput.style.boxShadow = illuminationOfError;
-      return priceInput.setCustomValidity(constraints.rangeUnderflow);
+  roomsNumber.addEventListener('change', function () {
+    var roomsCountValue = roomsNumber.value;
+    guestsCount.value = (roomsCountValue === '100') ? '0' : roomsCountValue;
+
+    while (guestsCount.firstChild) {
+      guestsCount.removeChild(guestsCount.firstChild);
     }
 
-    if (priceInput.validity.rangeOverflow) {
-      priceInput.style.boxShadow = illuminationOfError;
-      return priceInput.setCustomValidity(constraints.rangeOverflow);
+    getOptions(OPTIONS[roomsCountValue]);
+  });
+
+  window.constants.priceInput.addEventListener('invalid', function () {
+    window.constants.priceInput.setCustomValidity('');
+    window.constants.priceInput.style.boxShadow = 'none';
+    if (window.constants.priceInput.validity.valueMissing) {
+      window.constants.priceInput.style.boxShadow = illuminationOfError;
+      window.constants.priceInput.setCustomValidity('Введите цену');
     }
-
-    if (priceInput.validity.valueMissing) {
-      priceInput.style.boxShadow = illuminationOfError;
-      return priceInput.setCustomValidity(constraints.valueMissing);
+    if (window.constants.priceInput.validity.rangeUnderflow) {
+      window.constants.priceInput.style.boxShadow = illuminationOfError;
+      window.constants.priceInput.setCustomValidity('Не может стоить меньше ' + window.constants.priceInput.min);
     }
-
-    if (priceInput.validity.typeMismatch) {
-      priceInput.style.boxShadow = illuminationOfError;
-      return priceInput.setCustomValidity(constraints.typeMismatch);
+    if (window.constants.priceInput.validity.rangeOverflow) {
+      window.constants.priceInput.style.boxShadow = illuminationOfError;
+      window.constants.priceInput.setCustomValidity('Не может превышать ' + maxPrice);
     }
+  });
 
-    priceInput.style.boxShadow = 'none';
-    return priceInput.setCustomValidity('');
-  };
+  window.constants.titleInput.addEventListener('invalid', function () {
+    window.constants.titleInput.setCustomValidity('');
+    window.constants.titleInput.style.boxShadow = 'none';
+    if (window.constants.titleInput.validity.tooShort) {
+      window.constants.titleInput.style.boxShadow = illuminationOfError;
+      window.constants.titleInput.setCustomValidity('Заголовок должен содержать не менее ' + lengthOfTitle.MIN_LENGTH + ' символов');
+    }
+    if (window.constants.titleInput.validity.tooLong) {
+      window.constants.titleInput.style.boxShadow = illuminationOfError;
+      window.constants.titleInput.setCustomValidity('Длина заголовка не должна превышать ' + lengthOfTitle.MAX_LENGTH + ' символов');
+    }
+    if (window.constants.titleInput.validity.valueMissing) {
+      window.constants.titleInput.style.boxShadow = illuminationOfError;
+      window.constants.titleInput.setCustomValidity('Это поле обязательно для заполнения');
+    }
+  });
 
-  titleInput.addEventListener('invalid', checkTitleValidity, false);
-  priceInput.addEventListener('invalid', checkPriceValidity, false);
-
-  var getFormAddress = function (coordinates) {
-    var pinX = coordinates.x + MAIN_PIN_WIDTH;
-    var pinY = coordinates.y + MAIN_PIN_HEIGHT;
-    formAddress.value = 'x: ' + pinX + ', ' + 'y: ' + pinY;
-  };
-
-  var resetForm = function () {
-    window.constants.mainForm.reset();
-    synchronizeForm();
-    window.util.formHandler('Данные успешно отправлены!');
-    getFormAddress(window.constants.PIN_COORDINATES);
-    window.constants.mainPin.style.left = window.constants.PIN_COORDINATES.x + 'px';
-    window.constants.mainPin.style.top = window.constants.PIN_COORDINATES.y + 'px';
-  };
-
-  window.constants.mainForm.addEventListener('submit', function (evt) {
+  window.constants.mainform.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.upload(new FormData(window.constants.mainForm), resetForm, window.util.formHandler);
+    window.backend.save(new FormData(window.constants.mainform), onSuccess, window.util.getErrorMessage);
   });
-
-  window.form = {
-    getFormAddress: getFormAddress
-  };
 })();
