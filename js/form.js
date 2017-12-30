@@ -127,7 +127,7 @@
     }
     if (window.constants.priceInput.validity.rangeUnderflow) {
       window.constants.priceInput.style.boxShadow = illuminationOfError;
-      window.constants.priceInput.setCustomValidity('Не может стоить меньше ' + priceInput.min);
+      window.constants.priceInput.setCustomValidity('Не может стоить меньше ' + window.constants.priceInput.min);
     }
     if (window.constants.priceInput.validity.rangeOverflow) {
       window.constants.priceInput.style.boxShadow = illuminationOfError;
