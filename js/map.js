@@ -13,7 +13,7 @@
     BOTTOM: LocationArea.MAX_Y
   };
 
-  var numberOfPins = 5;
+  var NUMBER_OF_PINS = 5;
   var listOfPins = document.querySelector('.map__pins');
   var pinsCollection = [];
 
@@ -29,7 +29,7 @@
   // get announcements with pins
   var getAnnouncementWithPins = function (collection) {
     pinsCollection = collection;
-    var finalPinsCollection = pinsCollection.slice(numberOfPins);
+    var finalPinsCollection = pinsCollection.slice(NUMBER_OF_PINS);
     listOfPins.appendChild(getAnnouncement(finalPinsCollection));
   };
 
@@ -50,7 +50,7 @@
     if (mapCardActive) {
       window.util.mapBlock.removeChild(mapCardActive);
     }
-    filteredPins.length = Math.min(filteredPins.length, numberOfPins);
+    filteredPins.length = Math.min(filteredPins.length, NUMBER_OF_PINS);
     listOfPins.appendChild(getAnnouncement(filteredPins));
   };
 

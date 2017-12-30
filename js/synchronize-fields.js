@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   // synchronize any fields
   window.synchronizeFields = function (firstField, secondField, firstArray, secondArray, syncValues) {
 
