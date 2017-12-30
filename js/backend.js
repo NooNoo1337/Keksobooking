@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var SERVER_URL = 'https://js.dump.academy/keksobooking';
+  var URL = 'https://js.dump.academy/keksobooking';
 
   var createRequest = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
@@ -31,13 +31,13 @@
   window.backend = {
     load: function (onLoad, onError) {
       var xhr = createRequest(onLoad, onError);
-      xhr.open('GET', SERVER_URL + '/data');
+      xhr.open('GET', URL + '/data');
       xhr.send();
     },
     save: function (data, onLoad, onError) {
       var xhr = createRequest(onLoad, onError);
 
-      xhr.open('POST', SERVER_URL);
+      xhr.open('POST', URL);
       xhr.send(data);
     }
   };
