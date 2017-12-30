@@ -36,24 +36,24 @@
     });
   };
 
-  window.filterPins = function (defaultArray) {
+  window.filterPins = function (defaultCollection) {
     var filters = document.querySelectorAll('.map__filter');
     var activeFeatures = document.querySelectorAll('.map__filter-set input[type="checkbox"]:checked');
     var filtersSelect = [].slice.call(filters).filter(function (filter) {
       return filter.value !== 'any';
     });
 
-    var modifedArray = defaultArray.slice();
+    var modifedCollection = defaultCollection.slice();
 
     filtersSelect.forEach(function (item) {
       var type = item.name.split('-')[1];
-      modifedArray = (type === 'price') ? priceFilter(modifedArray, item.value) : valueFilter(modifedArray, item.value, type);
+      modifedCollection = (type === 'price') ? priceFilter(modifedCollection, item.value) : valueFilter(modifedCollection, item.value, type);
     });
 
     activeFeatures.forEach(function (item) {
-      modifedArray = featuresFilter(modifedArray, item.value);
+      modifedCollection = featuresFilter(modifedCollection, item.value);
     });
 
-    return modifedArray;
+    return modifedCollection;
   };
 })();

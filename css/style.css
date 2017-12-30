@@ -893,7 +893,7 @@ textarea:focus
 .form-popup__button::before {
   content: "";
   position: absolute;
-  top: 106px;
+  top: 107px;
   left: 190px;
   width: 16px;
   height: 2px;
@@ -904,7 +904,7 @@ textarea:focus
 .form-popup__button::after {
   content: "";
   position: absolute;
-  top: 106px;
+  top: 107px;
   left: 190px;
   width: 16px;
   height: 2px;

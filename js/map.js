@@ -1,84 +1,134 @@
 'use strict';
 
-// variables
-var mainPin = document.querySelector('.map__pin--main');
-var allFieldsets = document.querySelectorAll('fieldset');
+(function () {
+  var LocationArea = {
+    MIN_Y: 100,
+    MAX_Y: 650
+  };
 
-// activate map
-var activateMap = function () {
-  window.constants.mapBlock.classList.remove('map--faded');
-  window.constants.mainForm.classList.remove('notice__form--disabled');
+  var mapParameters = {
+    LEFT: window.util.pinParameters.pinWidth / 2,
+    RIGHT: window.util.mapBlock.clientWidth - window.util.pinParameters.pinWidth / 2,
+    TOP: LocationArea.MIN_Y,
+    BOTTOM: LocationArea.MAX_Y
+  };
 
-  allFieldsets.forEach(function (item) {
-    item.removeAttribute('disabled');
+  var numberOfPins = 5;
+  var listOfPins = document.querySelector('.map__pins');
+  var pinsCollection = [];
+
+  var getAnnouncement = function (collection) {
+    var fragment = document.createDocumentFragment();
+    collection.forEach(function (item) {
+      fragment.appendChild(window.pin.getMapPin(item));
+    });
+    return fragment;
+  };
+
+  var getAnnouncementWithPins = function (collection) {
+    pinsCollection = collection;
+    var finalPinsCollection = pinsCollection.slice(numberOfPins);
+    listOfPins.appendChild(getAnnouncement(finalPinsCollection));
+  };
+
+  var deletePins = function (parent) {
+    var pinsToRemove = parent.querySelectorAll('.map__pin:not(.map__pin--main)');
+    pinsToRemove.forEach(function (currentPin) {
+      parent.removeChild(currentPin);
+    });
+  };
+
+  var renderAllPins = function () {
+    var filteredPins = window.filterPins(pinsCollection);
+    var mapCardActive = document.querySelector(window.util.popup);
+
+    deletePins(listOfPins);
+    if (mapCardActive) {
+      window.util.mapBlock.removeChild(mapCardActive);
+    }
+    filteredPins.length = Math.min(filteredPins.length, numberOfPins);
+    listOfPins.appendChild(getAnnouncement(filteredPins));
+  };
+
+  var filters = document.querySelector('.map__filters');
+
+  filters.addEventListener('change', function () {
+    window.util.debounce(renderAllPins);
   });
 
-  var defaultCoordinates = {
-    x: mainPin.offsetLeft,
-    y: mainPin.offsetTop
-  };
 
-  window.constants.PIN_COORDINATES = defaultCoordinates;
-  window.form.getFormAddress(defaultCoordinates);
+  window.util.mainPin.addEventListener('mouseup', function () {
+    var mainForm = document.querySelector('.notice__form--disabled');
+    window.util.mapBlock.classList.remove('map--faded');
 
-  mainPin.removeEventListener('mouseup', activateMap);
-  mainPin.addEventListener('mousedown', dragPinMain);
-
-  window.load(window.pin.getFragmentWithPins, window.util.formHandler);
-};
-
-mainPin.addEventListener('click', activateMap);
-
-mainPin.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === window.constants.ENTER_BUTTON) {
-    activateMap();
-  }
-});
-
-window.constants.mapBlock.addEventListener('click', window.showPopup);
-
-window.constants.mapBlock.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === window.constants.ENTER_BUTTON) {
-    window.showPopup(evt);
-  }
-});
-
-var dragPinMain = function (evt) {
-  evt.preventDefault();
-
-  var startCoordinates = {
-    x: evt.clientX,
-    y: evt.clientY
-  };
-
-  var onMouseMove = function (moveEvent) {
-    moveEvent.preventDefault();
-
-    var shift = {
-      x: startCoordinates.x - moveEvent.clientX,
-      y: startCoordinates.y - moveEvent.clientY
-    };
-
-    startCoordinates = {
-      x: moveEvent.clientX,
-      y: moveEvent.clientY
-    };
-
-    if (mainPin.offsetTop - shift.y < window.constants.MIN_PIN_COORDINATE) {
-      mainPin.style.top = window.constants.MIN_PIN_COORDINATE + 'px';
-    } else if (mainPin.offsetTop - shift.y > window.constants.MAX_PIN_COORDINATE) {
-      mainPin.style.top = window.constants.MAX_PIN_COORDINATE + 'px';
+    if (mainForm) {
+      mainForm.classList.remove('notice__form--disabled');
+      window.backend.load(getAnnouncementWithPins, window.util.getErrorMessage);
     }
 
-    mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-    mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-  };
+    var allFieldsets = document.querySelectorAll('fieldset');
+    allFieldsets.forEach(function (item) {
+      item.removeAttribute('disabled');
+    });
+  });
 
-  var onMouseUp = function (upEvent) {
-    upEvent.preventDefault();
-    window.constants.mapBlock.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
-  };
-  window.constants.mapBlock.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
-};
+
+  window.util.mainPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      var currentCoords = {
+        x: window.util.mainPin.offsetLeft - shift.x,
+        y: window.util.mainPin.offsetTop - shift.y
+      };
+
+      if (currentCoords.y < mapParameters.TOP) {
+        currentCoords.y = mapParameters.TOP;
+      }
+
+      if (currentCoords.y > mapParameters.BOTTOM) {
+        currentCoords.y = mapParameters.BOTTOM;
+      }
+
+      if (currentCoords.x < mapParameters.LEFT) {
+        currentCoords.x = mapParameters.LEFT;
+      }
+
+      if (currentCoords.x > mapParameters.RIGHT) {
+        currentCoords.x = mapParameters.RIGHT;
+      }
+
+      window.util.mainPin.style.top = (currentCoords.y) + 'px';
+      window.util.mainPin.style.left = (currentCoords.x) + 'px';
+
+      var address = document.querySelector('#address');
+      address.value = 'x: ' + currentCoords.x + ' y: ' + currentCoords.y;
+    };
+
+    var onMouseUp = function () {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+}());
