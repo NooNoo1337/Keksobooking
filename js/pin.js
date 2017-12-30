@@ -7,7 +7,7 @@
     var activePin = document.querySelector('.map__pin--active');
 
     if (activePin) {
-      window.pin.removeActivePin(activePin);
+      window.pin.remove(activePin);
     }
 
     evt.currentTarget.classList.add('map__pin--active');
@@ -16,7 +16,7 @@
 
   // create pin
   window.pin = {
-    getMapPin: function (announcement) {
+    get: function (announcement) {
       var mapPinElement = pinTemplate.cloneNode(true);
       var pinAvatar = mapPinElement.querySelector('img');
       mapPinElement.style.left = announcement.location.x - window.util.pinParameters.indentX + 'px';
@@ -30,7 +30,7 @@
       return mapPinElement;
     },
 
-    removeActivePin: function (activeElement) {
+    remove: function (activeElement) {
       activeElement.classList.remove('map__pin--active');
     }
   };

@@ -35,7 +35,12 @@
 
   var maxPrice = '1000000';
 
-  var typesOfAccommodation = ['bungalo', 'flat', 'house', 'palace'];
+  var typesOfAccommodation = [
+    'bungalo',
+    'flat',
+    'house',
+    'palace'
+  ];
 
   var minPrice = [
     0,

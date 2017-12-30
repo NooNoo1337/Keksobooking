@@ -21,7 +21,7 @@
   var getAnnouncement = function (collection) {
     var fragment = document.createDocumentFragment();
     collection.forEach(function (item) {
-      fragment.appendChild(window.pin.getMapPin(item));
+      fragment.appendChild(window.pin.get(item));
     });
     return fragment;
   };
