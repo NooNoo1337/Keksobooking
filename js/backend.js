@@ -2,12 +2,12 @@
 
 (function () {
   var URL = 'https://js.dump.academy/keksobooking';
+  var OK_STATUS = 200;
 
   var createRequest = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.timeout = 5000;
-    var OK_STATUS = 200;
 
     xhr.addEventListener('load', function () {
       if (xhr.status === OK_STATUS) {
