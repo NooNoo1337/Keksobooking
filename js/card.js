@@ -45,6 +45,7 @@
     }
   };
 
+  // create announcement
   window.createAnnouncement = function (announcement) {
     var announcementElement = cardTemplate.cloneNode(true);
     var announcementFeatures = announcementElement.querySelector('.popup__features');

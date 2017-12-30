@@ -17,6 +17,7 @@
   var listOfPins = document.querySelector('.map__pins');
   var pinsCollection = [];
 
+  // get all announcements
   var getAnnouncement = function (collection) {
     var fragment = document.createDocumentFragment();
     collection.forEach(function (item) {
@@ -25,12 +26,14 @@
     return fragment;
   };
 
+  // get announcements with pins
   var getAnnouncementWithPins = function (collection) {
     pinsCollection = collection;
     var finalPinsCollection = pinsCollection.slice(numberOfPins);
     listOfPins.appendChild(getAnnouncement(finalPinsCollection));
   };
 
+  // delete unnecessary pins
   var deletePins = function (parent) {
     var pinsToRemove = parent.querySelectorAll('.map__pin:not(.map__pin--main)');
     pinsToRemove.forEach(function (currentPin) {
@@ -38,6 +41,7 @@
     });
   };
 
+  // render all pins
   var renderAllPins = function () {
     var filteredPins = window.filterPins(pinsCollection);
     var mapCardActive = document.querySelector(window.util.popup);
@@ -57,6 +61,7 @@
   });
 
 
+  // activate map
   window.util.mainPin.addEventListener('mouseup', function () {
     var mainForm = document.querySelector('.notice__form--disabled');
     window.util.mapBlock.classList.remove('map--faded');
@@ -73,6 +78,7 @@
   });
 
 
+  // pin movement
   window.util.mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 

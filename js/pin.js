@@ -14,6 +14,7 @@
     window.showCard(object);
   };
 
+  // create pin
   window.pin = {
     getMapPin: function (announcement) {
       var mapPinElement = pinTemplate.cloneNode(true);

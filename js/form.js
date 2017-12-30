@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var roomsNumber = window.constants.mainform.querySelector('#room_number');
+  var guestsCount = window.constants.mainform.querySelector('#capacity');
+  var illuminationOfError = '0 0 4px 2px red';
+  var i = 0;
 
   var NO_GUESTS = {
     value: 0,
@@ -51,16 +55,6 @@
     MAX_LENGTH: 100
   };
 
-  var form = document.querySelector('.notice__form');
-  var timeIn = form.querySelector('#timein');
-  var timeOut = form.querySelector('#timeout');
-  var housePrice = form.querySelector('#price');
-  var titleInput = form.querySelector('#title');
-  var priceInput = form.querySelector('#type');
-  var roomsCount = form.querySelector('#room_number');
-  var guestsCount = form.querySelector('#capacity');
-  var illuminationOfError = '0 0 4px 2px red';
-  var i = 0;
 
   var succesMessage = function () {
     var formPopup = document.createElement('div');
@@ -77,29 +71,31 @@
   };
 
   var onSuccess = function () {
-    form.reset();
+    window.constants.mainform.reset();
     succesMessage();
   };
 
 
-  var syncValues = function (element, value) {
+  var synchronizeValues = function (element, value) {
     element.value = value;
   };
 
-  var syncValueWithMin = function (element, value) {
+  var synchronizeMinValue = function (element, value) {
     element.min = value;
   };
 
-  timeIn.addEventListener('change', function () {
-    window.synchronizeFields(timeIn, timeOut, timeOfCheck, timeOfCheck, syncValues);
+  // synchronize checkin field with checkout field
+  window.constants.timeIn.addEventListener('change', function () {
+    window.synchronizeFields(window.constants.timeIn, window.constants.timeOut, timeOfCheck, timeOfCheck, synchronizeValues);
   });
 
-  timeOut.addEventListener('change', function () {
-    window.synchronizeFields(timeOut, timeIn, timeOfCheck, timeOfCheck, syncValues);
+  window.constants.timeOut.addEventListener('change', function () {
+    window.synchronizeFields(window.constants.timeOut, window.constants.timeIn, timeOfCheck, timeOfCheck, synchronizeValues);
   });
 
-  priceInput.addEventListener('change', function () {
-    window.synchronizeFields(priceInput, housePrice, typesOfAccommodation, minPrice, syncValueWithMin);
+  // synchronize type of accommodation field with it price
+  window.constants.typeInput.addEventListener('change', function () {
+    window.synchronizeFields(window.constants.typeInput, window.constants.priceInput, typesOfAccommodation, minPrice, synchronizeMinValue);
   });
 
   var getOptions = function (guests) {
@@ -111,8 +107,8 @@
     }
   };
 
-  roomsCount.addEventListener('change', function () {
-    var roomsCountValue = roomsCount.value;
+  roomsNumber.addEventListener('change', function () {
+    var roomsCountValue = roomsNumber.value;
     guestsCount.value = (roomsCountValue === '100') ? '0' : roomsCountValue;
 
     while (guestsCount.firstChild) {
@@ -122,42 +118,42 @@
     getOptions(OPTIONS[roomsCountValue]);
   });
 
-  priceInput.addEventListener('invalid', function () {
-    priceInput.setCustomValidity('');
-    priceInput.style.boxShadow = 'none';
-    if (priceInput.validity.valueMissing) {
-      priceInput.style.boxShadow = illuminationOfError;
-      priceInput.setCustomValidity('Введите цену');
+  window.constants.priceInput.addEventListener('invalid', function () {
+    window.constants.priceInput.setCustomValidity('');
+    window.constants.priceInput.style.boxShadow = 'none';
+    if (window.constants.priceInput.validity.valueMissing) {
+      window.constants.priceInput.style.boxShadow = illuminationOfError;
+      window.constants.priceInput.setCustomValidity('Введите цену');
     }
-    if (priceInput.validity.rangeUnderflow) {
-      priceInput.style.boxShadow = illuminationOfError;
-      priceInput.setCustomValidity('Не может стоить меньше ' + priceInput.min);
+    if (window.constants.priceInput.validity.rangeUnderflow) {
+      window.constants.priceInput.style.boxShadow = illuminationOfError;
+      window.constants.priceInput.setCustomValidity('Не может стоить меньше ' + priceInput.min);
     }
-    if (priceInput.validity.rangeOverflow) {
-      priceInput.style.boxShadow = illuminationOfError;
-      priceInput.setCustomValidity('Не может превышать ' + maxPrice);
-    }
-  });
-
-  titleInput.addEventListener('invalid', function () {
-    titleInput.setCustomValidity('');
-    titleInput.style.boxShadow = 'none';
-    if (titleInput.validity.tooShort) {
-      titleInput.style.boxShadow = illuminationOfError;
-      titleInput.setCustomValidity('Заголовок должен содержать не менее ' + lengthOfTitle.MIN_LENGTH + ' символов');
-    }
-    if (titleInput.validity.tooLong) {
-      titleInput.style.boxShadow = illuminationOfError;
-      titleInput.setCustomValidity('Длина заголовка не должна превышать ' + lengthOfTitle.MAX_LENGTH + ' символов');
-    }
-    if (titleInput.validity.valueMissing) {
-      titleInput.style.boxShadow = illuminationOfError;
-      titleInput.setCustomValidity('Это поле обязательно для заполнения');
+    if (window.constants.priceInput.validity.rangeOverflow) {
+      window.constants.priceInput.style.boxShadow = illuminationOfError;
+      window.constants.priceInput.setCustomValidity('Не может превышать ' + maxPrice);
     }
   });
 
-  form.addEventListener('submit', function (evt) {
+  window.constants.titleInput.addEventListener('invalid', function () {
+    window.constants.titleInput.setCustomValidity('');
+    window.constants.titleInput.style.boxShadow = 'none';
+    if (window.constants.titleInput.validity.tooShort) {
+      window.constants.titleInput.style.boxShadow = illuminationOfError;
+      window.constants.titleInput.setCustomValidity('Заголовок должен содержать не менее ' + lengthOfTitle.MIN_LENGTH + ' символов');
+    }
+    if (window.constants.titleInput.validity.tooLong) {
+      window.constants.titleInput.style.boxShadow = illuminationOfError;
+      window.constants.titleInput.setCustomValidity('Длина заголовка не должна превышать ' + lengthOfTitle.MAX_LENGTH + ' символов');
+    }
+    if (window.constants.titleInput.validity.valueMissing) {
+      window.constants.titleInput.style.boxShadow = illuminationOfError;
+      window.constants.titleInput.setCustomValidity('Это поле обязательно для заполнения');
+    }
+  });
+
+  window.constants.mainform.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(form), onSuccess, window.util.getErrorMessage);
+    window.backend.save(new FormData(window.constants.mainform), onSuccess, window.util.getErrorMessage);
   });
 })();

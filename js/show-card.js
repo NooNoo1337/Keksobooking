@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+
+  // show card(popup)
   window.showCard = function (currentAdvert, filtersContainer) {
     var activePopup = document.querySelector(window.util.popup);
 
