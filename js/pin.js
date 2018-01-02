@@ -7,7 +7,7 @@
     var activePin = document.querySelector('.map__pin--active');
 
     if (activePin) {
-      window.pin.remove(activePin);
+      window.pin.deactivate(activePin);
     }
 
     evt.currentTarget.classList.add('map__pin--active');
@@ -30,7 +30,7 @@
       return mapPinElement;
     },
 
-    remove: function (activeElement) {
+    deactivate: function (activeElement) {
       activeElement.classList.remove('map__pin--active');
     }
   };
