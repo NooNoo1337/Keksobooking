@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
-* Студент: [Михаил Черемухин-Рерберг](https://up.htmlacademy.ru/javascript/11/user/429233).
-* Наставник: `Неизвестно`.
+* Студент: [Артём Подаван Кравченко](https://github.com/HeyAshh).
+* Наставник: [Михаил, Старший Джедай](https://github.com/NooNoo1337).
 
 ---
 
